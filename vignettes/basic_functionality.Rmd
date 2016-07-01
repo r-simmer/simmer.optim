@@ -1,0 +1,154 @@
+---
+title: "Basic Functionality"
+author: "Bart Smeets"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Basic Functionality}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Basic example
+
+See the basic `simmer` example below.
+
+```{r}
+library(simmer)
+
+t0<-create_trajectory() %>%
+  seize("nurse") %>%
+  timeout(function() rpois(1, 10)) %>%
+  release("nurse") %>%
+  seize("cardiologist") %>%
+  timeout(function() rpois(1, 20)) %>%
+  release("cardiologist") %>%
+  branch(function() sample(c(1,2), 1),
+         merge=c(T,T),
+         create_trajectory() %>%
+           seize("physiotherapist") %>%
+           timeout(function() rpois(1, 45)) %>%
+           release("physiotherapist"),
+         create_trajectory() %>%
+           timeout(0))
+
+env<-simmer() %>%
+  add_generator("patient", t0, at(seq(0,60*4, 10))) %>%
+  add_resource("nurse", 1) %>%
+  add_resource("cardiologist", 1) %>%
+  add_resource("physiotherapist", 1) %>%
+  run(until=4*60)
+```
+
+It doesn't seem to be a very stable process:
+
+```{r}
+plot_evolution_arrival_times(env, "waiting_time")
+```
+
+The number of patients served before closing time is: 
+
+```{r}
+# number of patients
+get_mon_arrivals(env) %>% NROW
+```
+
+
+# Optimizing the situation
+
+To optimize the scenario we are going to check a number of different values for the following variables.
+
+- the resource capacity: a range of `1:4` for each resource
+- the inter-arrival time: a vector of `c(10, 15, 20, 25)`
+
+For this small problem, testing all the possiblities by hand will become somewhat labourious:
+
+```{r}
+expand.grid(nurse = 1:4,
+            cardiologist = 1:4,
+            physiotherapist = 1:4,
+            IAT = c(10, 15, 20, 25)) %>% NROW
+
+```
+
+In other words, we would have to test 256 possible combinations.
+
+
+## The constraints
+
+Let's say we have a daily budget of €1000, and want to allow a maximum waiting time of 30 minutes.
+We have a standard cost per hour of 40€.
+
+## The objective
+
+Our object is to maximize the number of patients that can finish the trajectory succesfully.
+
+## Modeling the problem
+
+Below an adjusted version of the `simmer` env defined above. Notice the `.opt()` calls, creating the `simmer` env inside a function body and the list object that we return.
+
+```{r}
+library(simmer.optim)
+
+the_simmer_env<-function(){
+  
+  env<-simmer() %>%
+    add_generator("patient", t0, at(seq(0,60*4, .opt("IAT")))) %>%
+    add_resource("nurse", .opt("nurse")) %>%
+    add_resource("cardiologist", .opt("cardiologist")) %>%
+    add_resource("physiotherapist", .opt("physiotherapist")) %>%
+    run(until=4*60)
+  
+  standard_cost <- 40
+  arr_times <- get_mon_arrivals(env)
+  wait_times <- arr_times$end_time - arr_times$start_time - arr_times$activity_time
+  
+  res<-list(
+    objective = NROW(get_mon_arrivals(env)),
+    constraints = list(
+      # note that it doesn't take into account the hours effectively worked but instead runtime
+      budget = (.opt("nurse") + .opt("physiotherapist") + .opt("cardiologist")) * (now(env) / 60) * standard_cost <= 2000,
+      max_waiting = wait_times <=  30
+    )
+  )
+  print(res)
+  res
+}
+
+optimal_grid<-
+  grid_optim(the_simmer_env, objective = "max", 
+             nurse = 1:4,
+             cardiologist = 1:4,
+             physiotherapist = 1:4,
+             IAT = c(10, 15, 20, 25))
+
+optimal_params<-
+  optimal_grid$get_results()
+
+optimal_params
+```
+
+# The result
+
+Let's plug these variables into the simulation and see what we get.
+
+```{r}
+env<-simmer() %>%
+    add_generator("patient", t0, at(seq(0,60*4, optimal_params$IAT))) %>%
+    add_resource("nurse", optimal_params$nurse) %>%
+    add_resource("cardiologist", optimal_params$cardiologist) %>%
+    add_resource("physiotherapist", optimal_params$physiotherapist) %>%
+    run(until=4*60)
+
+# number of patients
+get_mon_arrivals(env) %>% NROW
+
+get_mon_arrivals(env)  %>%
+  mutate(waiting =  end_time -  start_time -activity_time)
+
+# waiting time
+plot_evolution_arrival_times(env, "waiting_time")
+```
+
+
+

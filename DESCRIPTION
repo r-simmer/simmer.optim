@@ -1,0 +1,15 @@
+Package: simmer.optim
+Type: Package
+Title: Paramater optimization functions for simmer
+Version: 0.1.0
+Author: Bart Smeets
+Maintainer: Bart Smeets <bartsmeets86@gmail.com>
+Description: More about what it does (maybe more than one line)
+License: MIT
+LazyData: TRUE
+RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown,
+    testthat
+Depends: simmer (>= 3.2.0)
+VignetteBuilder: knitr
