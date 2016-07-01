@@ -103,7 +103,7 @@ the_simmer_env<-function(){
   arr_times <- get_mon_arrivals(env)
   wait_times <- arr_times$end_time - arr_times$start_time - arr_times$activity_time
   
-  res<-list(
+  list(
     objective = NROW(get_mon_arrivals(env)),
     constraints = list(
       # note that it doesn't take into account the hours effectively worked but instead runtime
@@ -111,8 +111,6 @@ the_simmer_env<-function(){
       max_waiting = wait_times <=  30
     )
   )
-  print(res)
-  res
 }
 
 optimal_grid<-
@@ -142,9 +140,6 @@ env<-simmer() %>%
 
 # number of patients
 get_mon_arrivals(env) %>% NROW
-
-get_mon_arrivals(env)  %>%
-  mutate(waiting =  end_time -  start_time -activity_time)
 
 # waiting time
 plot_evolution_arrival_times(env, "waiting_time")

@@ -11,8 +11,13 @@ SimmerOptim<-R6::R6Class(
     },
     run_instance = function(...){
       temp_env = new.env(parent=globalenv())
+      ## below feels a bit hackish
       assign(".opt", opt_func(...), envir=temp_env)
-      res<-eval(self$sim_expr(), envir=temp_env)
+      assign("sim_obj", self$sim_expr, envir=temp_env)
+      local({
+        environment(sim_obj) <- environment()
+      }, envir=temp_env)
+      res<-eval(quote(sim_obj()), envir=temp_env)
     }
   )
 )
