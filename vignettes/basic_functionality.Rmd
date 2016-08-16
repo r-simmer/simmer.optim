@@ -145,5 +145,7 @@ get_mon_arrivals(env) %>% NROW
 plot_evolution_arrival_times(env, "waiting_time")
 ```
 
+# Multiple runs of a simulation environment
+
 
 

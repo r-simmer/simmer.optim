@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-optim_results <- function(objective, constraints = list(), envs=NA){
+optim_results <- function(objective, constraints = list(), envs=NULL){
   res<-list(objective=objective,
             constraints=constraints,
             envs=envs)

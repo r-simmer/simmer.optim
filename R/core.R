@@ -1,79 +1,46 @@
 SimmerOptim<-R6::R6Class(
   "SimmerOptim",
   public=list(
-    results=list(),
-    sim_expr=NA,
-    objective=NA,
-
+    sim_expr = NULL,
+    objective = NULL,
+    .results = NULL,
     initialize = function(sim_expr, objective){
       self$sim_expr <- sim_expr
       self$objective <- objective
     },
+
     run_instance = function(...){
-      temp_env = new.env(parent=globalenv())
-      ## below feels a bit hackish
-      assign(".opt", opt_func(...), envir=temp_env)
-      assign("sim_obj", self$sim_expr, envir=temp_env)
-      local({
-        environment(sim_obj) <- environment()
-      }, envir=temp_env)
-      res<-eval(quote(sim_obj()), envir=temp_env)
+      run_instance(self$sim_expr, ...)
+    },
+
+    results = function(objective, params, ...){
+      if(missing(objective)) return(self$.results)
+      else{
+        self$.results <- c(list(objective = objective,
+                                params = params),
+                           list(...))
+      }
     }
   )
 )
 
 
-GridOptim<-R6::R6Class(
-  "GridOptim",
-  inherit=SimmerOptim,
-  public=list(
-    search_grid=NA,
 
-    initialize = function(sim_expr, objective = c("min","max"), ...){
-      super$objective <- match.arg(objective)
-      super$initialize(sim_expr, objective)
-      if(length(list(...)) == 0) stop("Please supply parameters to optimize over.")
-
-      self$search_grid<- data.frame(expand.grid(list(...)))
-
-      self$optimize()
-    },
-    optimize = function(){
-      self$results<-
-        lapply(1:NROW(self$search_grid), function(i){
-          res<-do.call(super$run_instance, self$search_grid[i, ])
-          res$index <- i
-          res
-        })
-    },
-    get_results = function(){
-      # remove constraints
-      results_filtered <-
-        Filter(function(x) all(unlist(x$constraints)), self$results)
-      # extract objective values
-      objs<-sapply(results_filtered, function(x) x$objective)
-
-      # selector func
-      select_func <-
-        switch(self$objective,
-               "min" = which.min,
-               "max" = which.max)
-
-      best_grid_row <- results_filtered[[select_func(objs)]]$index
-      as.list(self$search_grid[best_grid_row,])
-    }
-  ))
-
-
-#' A simmer grid optimizer
+#' Show the results of an optimization procedure
 #'
-#' @param sim_expr a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}
-#' @param objective the type of objective to focus on, for now only \code{minimize} and \code{maximize}
-#' @param ... the named arguments and related vectors to optimize over, e.g. \code{var1=1:5, var2=3:5}
+#' @param optim_obj the optimization object
 #'
-#' @return the optimal combination of the variable possibilities supplied in \code{...}
-#' @import R6
+#' @return
 #' @export
-grid_optim<-function(sim_expr, objective = c("min", "max"), ...){
-  GridOptim$new(sim_expr, objective, ...)
+#'
+#' @examples
+results <- function(optim_obj){
+  optim_obj$results()
+}
+
+#' @export
+run_instance <- function(sim_expr, ...){
+  temp_env <- new.env(parent=globalenv())
+  assign(".opt", opt_func(...), envir=temp_env)
+  eval(body(sim_expr), envir=temp_env)
 }

@@ -4,7 +4,7 @@
 \alias{optim_results}
 \title{Function to pass results of simmer evaluation back to the optimization framework}
 \usage{
-optim_results(objective, constraints = list(), envs = NA)
+optim_results(objective, constraints = list(), envs = NULL)
 }
 \arguments{
 \item{objective}{the value of the objective}
