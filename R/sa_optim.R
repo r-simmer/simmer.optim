@@ -1,17 +1,16 @@
 
-DEOptim<-R6::R6Class(
-  "DEOptim",
+SAOptim<-R6::R6Class(
+  "SAOptim",
   inherit=SimmerOptim,
   public=list(
     big_M=1e9,
     obj_coeff = NULL,
     lower_bounds = NULL,
     upper_bounds = NULL,
-    deoptim_control = NULL,
     print = function(){
-      cat("A SimmerOptim instance of type Differential Evolution\n")
+      cat("A SimmerOptim instance of type Simulated Annealing\n")
     },
-    initialize = function(sim_expr, objective = c("min","max"), deoptim_control = DEoptim::DEoptim.control(), ...){
+    initialize = function(sim_expr, objective = c("min","max"), control = list(), ...){
       objective <- match.arg(objective)
       super$initialize(sim_expr, objective)
 
@@ -21,13 +20,11 @@ DEOptim<-R6::R6Class(
 
       if(length(list(...)) == 0) stop("Please supply parameters to optimize over.")
 
-      self$deoptim_control <- deoptim_control
-
       args<-list(...)
       self$lower_bounds <- sapply(args, function(x) x[1])
       self$upper_bounds <- sapply(args, function(x) x[2])
 
-      self$optimize()
+      self$optimize(control)
     },
     convert_obj_value = function(results){
       constraints_met = all(unlist(results$constraints))
@@ -37,28 +34,31 @@ DEOptim<-R6::R6Class(
         results$objective * self$obj_coeff
       }
     },
-    optimize = function(){
+    optimize = function(control){
 
       fn <- function(func_params){
         arg_names = names(self$lower_bounds)
         named_args = list()
         for(i in seq_along(arg_names)){
-          named_args[[arg_names[i]]] = func_params[[i]]
+          named_args[[arg_names[i]]] = round(func_params[[i]])
         }
         obj <- do.call(super$run_instance, named_args)
 
         self$convert_obj_value(obj)
       }
 
-      res<-DEoptim::DEoptim(fn,
-                            lower = self$lower_bounds,
-                            upper = self$upper_bounds,
-                            fnMap = round,
-                            control = self$deoptim_control)
+      res<-GenSA::GenSA(par = NULL,
+                        fn = fn,
+                        lower = self$lower_bounds,
+                        upper = self$upper_bounds,
+                        control = control)
 
-      super$results(objective = res$optim$bestval * self$obj_coeff,
-                    params = res$optim$bestmem,
-                    iters = res$optim$iter)
+      params <- round(res$par)
+      names(params) <- names(self$lower_bounds)
+
+      super$results(objective = res$value * self$obj_coeff,
+                    params = params,
+                    iters = res$counts)
     }
   )
 )
@@ -75,6 +75,6 @@ DEOptim<-R6::R6Class(
 #' @return the optimal combination of the variable possibilities supplied in \code{...}
 #' @import R6
 #' @export
-de_optim<-function(sim_expr, objective = c("min", "max"), ...){
-  DEOptim$new(sim_expr, objective, ...)
+sa_optim<-function(sim_expr, objective = c("min", "max"), ...){
+  SAOptim$new(sim_expr, objective, ...)
 }

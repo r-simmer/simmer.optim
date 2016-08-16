@@ -5,13 +5,8 @@ GridOptim<-R6::R6Class(
   public=list(
     search_grid=NA,
     print = function(){
-      cat("A SimmerOptim instance of type GridOptim \n\n")
-      if(is.null(super$results()))
-        cat("Optimization procedure hasn't run yet")
-      else
-        cat("Optimization procedure has been run.\nCheck the results by calling results(this_object)")
+      cat("A SimmerOptim instance of type Grid Optimization\n")
     },
-
     initialize = function(sim_expr, objective = c("min","max"), ...){
       objective <- match.arg(objective)
       super$initialize(sim_expr, objective)
@@ -20,7 +15,6 @@ GridOptim<-R6::R6Class(
       self$search_grid<-data.frame(expand.grid(list(...)))
 
       self$optimize()
-      self
     },
     optimize = function(){
       intermediary_results<-

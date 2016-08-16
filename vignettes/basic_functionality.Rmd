@@ -1,6 +1,6 @@
 ---
 title: "Basic Functionality"
-author: "Bart Smeets"
+author: "Bart Smeets, Iñaki Ucar"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -8,6 +8,10 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+# DES & parameter optimization
+
+Discrete-event simulation (DES) is often used to analyze processes. Using DES one could for example give an answer to the question 'if we have `x` amount of resources of type `A`, what will the average waiting time in the process be. One way of going about this is to manually adjust the value of `x` and rerun the simulation at each change and evaluate the results. Another approach is to use a parameter optimization method.
 
 # Basic example
 
