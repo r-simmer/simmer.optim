@@ -7,11 +7,12 @@ DEOptim<-R6::R6Class(
     obj_coeff = NULL,
     lower_bounds = NULL,
     upper_bounds = NULL,
+    integer_vals = NULL,
     deoptim_control = NULL,
     print = function(){
       cat("A SimmerOptim instance of type Differential Evolution\n")
     },
-    initialize = function(sim_expr, objective = c("min","max"), deoptim_control = DEoptim::DEoptim.control(), ...){
+    initialize = function(sim_expr, objective = c("min","max"), deoptim_control = RcppDE::DEoptim.control(), ...){
       objective <- match.arg(objective)
       super$initialize(sim_expr, objective)
 
@@ -26,11 +27,13 @@ DEOptim<-R6::R6Class(
       args<-list(...)
       self$lower_bounds <- sapply(args, function(x) x[1])
       self$upper_bounds <- sapply(args, function(x) x[2])
+      self$integer_vals <- sapply(self$lower_bounds, is.integer)
 
       self$optimize()
+      self
     },
     convert_obj_value = function(results){
-      constraints_met = all(unlist(results$constraints))
+      constraints_met <- all(unlist(results$constraints))
       if(!constraints_met) {
         self$big_M * -self$obj_coeff
       } else {
@@ -43,21 +46,32 @@ DEOptim<-R6::R6Class(
         arg_names = names(self$lower_bounds)
         named_args = list()
         for(i in seq_along(arg_names)){
-          named_args[[arg_names[i]]] = func_params[[i]]
+            if(self$integer_vals[i])
+              named_args[[arg_names[i]]] = round(func_params[[i]])
+            else
+              named_args[[arg_names[i]]] = func_params[[i]]
         }
-        obj <- do.call(super$run_instance, named_args)
 
+        obj <- do.call(super$run_instance, named_args)
         self$convert_obj_value(obj)
       }
 
-      res<-DEoptim::DEoptim(fn,
+      # create fnMap func to take into account integer constraints
+
+      res<-RcppDE::DEoptim(fn,
                             lower = self$lower_bounds,
                             upper = self$upper_bounds,
-                            fnMap = round,
                             control = self$deoptim_control)
 
+      params <- res$optim$bestmem
+      for(i in seq_along(params)){
+        if(self$integer_vals[i]) params[i] <- round(params[i])
+      }
+
+      params <- as.list(params)
+
       super$results(objective = res$optim$bestval * self$obj_coeff,
-                    params = res$optim$bestmem,
+                    params = params,
                     iters = res$optim$iter)
     }
   )

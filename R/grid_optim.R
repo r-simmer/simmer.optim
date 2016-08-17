@@ -46,7 +46,7 @@ GridOptim<-R6::R6Class(
 
       super$results(objective = best_run$objective,
                     params = as.list(self$search_grid[best_grid_row, , drop=FALSE]),
-                    details = best_run)
+                    best_run = best_run)
     }
   ))
 

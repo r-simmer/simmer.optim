@@ -13,7 +13,7 @@ SimmerOptim<-R6::R6Class(
       run_instance(self$sim_expr, ...)
     },
 
-    results = function(objective, params, ...){
+    results = function(objective, params, best_run, ...){
       if(missing(objective)) return(self$.results)
       else{
         self$.results <- c(list(objective = objective,
@@ -25,19 +25,11 @@ SimmerOptim<-R6::R6Class(
 )
 
 
-
-#' Show the results of an optimization procedure
+#' Instantiate a simmer expression
 #'
-#' @param optim_obj the optimization object
+#' @param sim_expr the simmer expression
+#' @param ... named parameters to be passed to the simmer expression
 #'
-#' @return
-#' @export
-#'
-#' @examples
-results <- function(optim_obj){
-  optim_obj$results()
-}
-
 #' @export
 run_instance <- function(sim_expr, ...){
   temp_env <- new.env(parent=globalenv())

@@ -13,7 +13,14 @@ vignette: >
 
 Discrete-event simulation (DES) is often used to analyze processes. Using DES one could for example give an answer to the question 'if we have `x` amount of resources of type `A`, what will the average waiting time in the process be. One way of going about this is to manually adjust the value of `x` and rerun the simulation at each change and evaluate the results. Another approach is to use a parameter optimization method.
 
-# Basic example
+Optimization revolved around the following aspects:
+
+- objective: a variable in simulated process that we want to minimize or maximize
+- constraints: upper and lower boundaries on variables in the simulation
+- inputs:
+
+
+# A basic example
 
 See the basic `simmer` example below.
 
@@ -58,7 +65,7 @@ get_mon_arrivals(env) %>% NROW
 ```
 
 
-# Optimizing the situation
+## Optimizing the situation
 
 To optimize the scenario we are going to check a number of different values for the following variables.
 
@@ -113,35 +120,28 @@ the_simmer_env<-function(){
       # note that it doesn't take into account the hours effectively worked but instead runtime
       budget = (.opt("nurse") + .opt("physiotherapist") + .opt("cardiologist")) * (now(env) / 60) * standard_cost <= 2000,
       max_waiting = wait_times <=  30
-    )
+    ),
+    envs=env
   )
 }
 
-optimal_grid<-
-  grid_optim(the_simmer_env, objective = "max", 
-             nurse = 1:4,
-             cardiologist = 1:4,
-             physiotherapist = 1:4,
-             IAT = c(10, 15, 20, 25))
+r <- grid_optim(the_simmer_env, 
+                objective = "max", 
+                nurse = 1:4,
+                cardiologist = 1:4,
+                physiotherapist = 1:4,
+                IAT = c(10, 15, 20, 25))
 
-optimal_params<-
-  optimal_grid$get_results()
-
-optimal_params
+results(r)$objective
+results(r)$params
 ```
 
-# The result
+## The result
 
 Let's plug these variables into the simulation and see what we get.
 
 ```{r}
-env<-simmer() %>%
-    add_generator("patient", t0, at(seq(0,60*4, optimal_params$IAT))) %>%
-    add_resource("nurse", optimal_params$nurse) %>%
-    add_resource("cardiologist", optimal_params$cardiologist) %>%
-    add_resource("physiotherapist", optimal_params$physiotherapist) %>%
-    run(until=4*60)
-
+run_optimized(r)
 # number of patients
 get_mon_arrivals(env) %>% NROW
 
@@ -149,7 +149,30 @@ get_mon_arrivals(env) %>% NROW
 plot_evolution_arrival_times(env, "waiting_time")
 ```
 
-# Multiple runs of a simulation environment
+# An example simulation problem
+
+# The basics
+
+## Defining the simmer expression
+
+## Choosing a method
 
 
 
+# Available optimizers
+
+## Grid optimization
+
+The grid optimization algorithm starts by building a grid with all the possible combination of the values you supply to it. To illustrate this, consider the below example where we generate all possibile combinations of `x` and `y` for when we pass a range of `1:2` to both the values.
+
+```{r}
+expand.grid(
+  x=1:2,
+  y=1:2
+)
+```
+
+
+## Simulated annealing
+
+## Differential evolution

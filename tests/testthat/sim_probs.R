@@ -101,5 +101,4 @@ sim_prob_3 <- function(){
     envs = env
   )
 
-
 }

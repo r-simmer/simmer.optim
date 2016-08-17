@@ -7,6 +7,7 @@ SAOptim<-R6::R6Class(
     obj_coeff = NULL,
     lower_bounds = NULL,
     upper_bounds = NULL,
+    integer_vals = NULL,
     print = function(){
       cat("A SimmerOptim instance of type Simulated Annealing\n")
     },
@@ -23,6 +24,11 @@ SAOptim<-R6::R6Class(
       args<-list(...)
       self$lower_bounds <- sapply(args, function(x) x[1])
       self$upper_bounds <- sapply(args, function(x) x[2])
+      self$integer_vals <- sapply(self$lower_bounds, is.integer)
+
+      # convert everything to numeric (gensa can't handle integer vals natively)
+      self$lower_bounds <- sapply(self$lower_bounds, as.numeric)
+      self$upper_bounds <- sapply(self$upper_bounds, as.numeric)
 
       self$optimize(control)
     },
@@ -40,7 +46,10 @@ SAOptim<-R6::R6Class(
         arg_names = names(self$lower_bounds)
         named_args = list()
         for(i in seq_along(arg_names)){
-          named_args[[arg_names[i]]] = round(func_params[[i]])
+          if(self$integer_vals[i])
+            named_args[[arg_names[i]]] = round(func_params[[i]])
+          else
+            named_args[[arg_names[i]]] = func_params[[i]]
         }
         obj <- do.call(super$run_instance, named_args)
 
@@ -53,8 +62,14 @@ SAOptim<-R6::R6Class(
                         upper = self$upper_bounds,
                         control = control)
 
-      params <- round(res$par)
+
+      params <- res$par
       names(params) <- names(self$lower_bounds)
+      for(i in seq_along(params)){
+        if(self$integer_vals[i]) params[i] <- round(params[i])
+      }
+
+      params <- as.list(params)
 
       super$results(objective = res$value * self$obj_coeff,
                     params = params,

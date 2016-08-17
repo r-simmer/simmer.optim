@@ -5,11 +5,10 @@ test_that("no errors are returned",{
   expect_error({
     r<-de_optim(sim_prob_1,
                 objective = "max",
-                nurse = c(1,4),
-                cardiologist = c(1,4),
-                deoptim_control = DEoptim::DEoptim.control(
-                  itermax = 2
-                ))
+                nurse = as.integer(c(1,4)),
+                cardiologist = as.integer(c(1,4)),
+                deoptim_control = RcppDE::DEoptim.control(itermax = 2)
+                )
   }, NA)
 })
 
@@ -17,9 +16,50 @@ test_that("no errors are returned",{
 test_that("converges correctly",{
   r<-de_optim(sim_prob_1,
               objective = "max",
-              nurse = c(1,4),
-              cardiologist = c(1,4),
-              deoptim_control = DEoptim::DEoptim.control(itermax = 10)
+              nurse = as.integer(c(1,4)),
+              cardiologist = as.integer(c(1,4)),
+              deoptim_control = RcppDE::DEoptim.control(itermax = 10)
   )
   expect_true(results(r)$objective >= 40 && results(r)$objective <= 50)
+})
+
+
+test_that("works correctly with numeric values",{
+  fun<-function(){
+    optim_results(objective = .opt("x"))
+  }
+  r<-de_optim(fun,
+              objective = "min",
+              x = c(.6, 2)
+  )
+  expect_equal(results(r)$params$x, .6)
+
+})
+
+test_that("works correctly with integer values",{
+  fun<-function(){
+    optim_results(objective = .opt("x"))
+  }
+  r<-de_optim(fun,
+              objective = "min",
+              x = as.integer(c(1, 2))
+  )
+  expect_equal(results(r)$params$x, 1)
+
+})
+
+test_that("works correctly with maximization and minimization", {
+  fun<-function(){
+    optim_results(objective = .opt("x"))
+  }
+  r_max<-de_optim(fun,
+              objective="max",
+              x=c(1,2))
+  r_min<-de_optim(fun,
+                  objective="min",
+                  x=c(1,2))
+
+
+  expect_equal(results(r_max)$objective, 2)
+  expect_equal(results(r_min)$objective, 1)
 })
