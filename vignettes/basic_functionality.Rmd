@@ -13,12 +13,11 @@ vignette: >
 
 Discrete-event simulation (DES) is often used to analyze processes. Using DES one could for example give an answer to the question 'if we have `x` amount of resources of type `A`, what will the average waiting time in the process be. One way of going about this is to manually adjust the value of `x` and rerun the simulation at each change and evaluate the results. Another approach is to use a parameter optimization method.
 
-Optimization revolved around the following aspects:
+In parameter optimization we work with the following key aspects:
 
 - objective: a variable in simulated process that we want to minimize or maximize
 - constraints: upper and lower boundaries on variables in the simulation
-- inputs:
-
+- inputs: the simulation parameters that we want to manipulate in order to achieve a minimization / maximization of the objective
 
 # A basic example
 
@@ -26,6 +25,7 @@ See the basic `simmer` example below.
 
 ```{r}
 library(simmer)
+library(dplyr)
 
 t0<-create_trajectory() %>%
   seize("nurse") %>%
@@ -33,39 +33,48 @@ t0<-create_trajectory() %>%
   release("nurse") %>%
   seize("cardiologist") %>%
   timeout(function() rpois(1, 20)) %>%
-  release("cardiologist") %>%
-  branch(function() sample(c(1,2), 1),
-         merge=c(T,T),
-         create_trajectory() %>%
-           seize("physiotherapist") %>%
-           timeout(function() rpois(1, 45)) %>%
-           release("physiotherapist"),
-         create_trajectory() %>%
-           timeout(0))
+  release("cardiologist")
 
 env<-simmer() %>%
-  add_generator("patient", t0, at(seq(0,60*4, 10))) %>%
+  add_generator("patient", t0, at(seq(0,60*4, 15))) %>%
   add_resource("nurse", 1) %>%
   add_resource("cardiologist", 1) %>%
-  add_resource("physiotherapist", 1) %>%
-  run(until=4*60)
+  run()
 ```
 
-It doesn't seem to be a very stable process:
+In this example, a patient first sees a nurse, followed by a visit to the cadiologist. The consultation is planned to last 4 hours (or 240 minutes).
+
+In the plot below, we can see that the process isn't very stable. Moreover it lasts a good bit more than 4 hours.
 
 ```{r}
 plot_evolution_arrival_times(env, "waiting_time")
 ```
 
-The number of patients served before closing time is: 
+The number of patients served in this process is:
 
 ```{r}
-# number of patients
-get_mon_arrivals(env) %>% NROW
+get_mon_arrivals(env) %>% NROW()
+```
+
+While the number of patients served before the planned end of the consultation (after 4 hours) is:
+
+```{r}
+get_mon_arrivals(env) %>%
+  filter(end_time < 4*60) %>%
+  NROW()
 ```
 
 
 ## Optimizing the situation
+
+The hospital wants to reorganize the process. The process requirements are specified as follows:
+
+- a maximization of the number of patients served before the 4 hour mark has been reached (= **objective**)
+- a employee budget of 1500€ is available for the consultation (= **constraint**)
+  - rate nurse: 50€ / hr
+  - rate cardiologist: 100€ / hr
+- a maximum average waiting time of 30 minutes is allowed (= **constraint**)
+
 
 To optimize the scenario we are going to check a number of different values for the following variables.
 
@@ -77,87 +86,18 @@ For this small problem, testing all the possiblities by hand will become somewha
 ```{r}
 expand.grid(nurse = 1:4,
             cardiologist = 1:4,
-            physiotherapist = 1:4,
-            IAT = c(10, 15, 20, 25)) %>% NROW
+            IAT = c(10, 15, 20, 25)) %>% NROW()
 
 ```
 
-In other words, we would have to test 256 possible combinations.
+In other words, we would have to test 64 possible combinations of these variables.
 
-
-## The constraints
-
-Let's say we have a daily budget of €1000, and want to allow a maximum waiting time of 30 minutes.
-We have a standard cost per hour of 40€.
-
-## The objective
-
-Our object is to maximize the number of patients that can finish the trajectory succesfully.
 
 ## Modeling the problem
-
-Below an adjusted version of the `simmer` env defined above. Notice the `.opt()` calls, creating the `simmer` env inside a function body and the list object that we return.
-
-```{r}
-library(simmer.optim)
-
-the_simmer_env<-function(){
-  
-  env<-simmer() %>%
-    add_generator("patient", t0, at(seq(0,60*4, .opt("IAT")))) %>%
-    add_resource("nurse", .opt("nurse")) %>%
-    add_resource("cardiologist", .opt("cardiologist")) %>%
-    add_resource("physiotherapist", .opt("physiotherapist")) %>%
-    run(until=4*60)
-  
-  standard_cost <- 40
-  arr_times <- get_mon_arrivals(env)
-  wait_times <- arr_times$end_time - arr_times$start_time - arr_times$activity_time
-  
-  list(
-    objective = NROW(get_mon_arrivals(env)),
-    constraints = list(
-      # note that it doesn't take into account the hours effectively worked but instead runtime
-      budget = (.opt("nurse") + .opt("physiotherapist") + .opt("cardiologist")) * (now(env) / 60) * standard_cost <= 2000,
-      max_waiting = wait_times <=  30
-    ),
-    envs=env
-  )
-}
-
-r <- grid_optim(the_simmer_env, 
-                objective = "max", 
-                nurse = 1:4,
-                cardiologist = 1:4,
-                physiotherapist = 1:4,
-                IAT = c(10, 15, 20, 25))
-
-results(r)$objective
-results(r)$params
-```
 
 ## The result
 
 Let's plug these variables into the simulation and see what we get.
-
-```{r}
-run_optimized(r)
-# number of patients
-get_mon_arrivals(env) %>% NROW
-
-# waiting time
-plot_evolution_arrival_times(env, "waiting_time")
-```
-
-# An example simulation problem
-
-# The basics
-
-## Defining the simmer expression
-
-## Choosing a method
-
-
 
 # Available optimizers
 

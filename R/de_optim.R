@@ -23,6 +23,7 @@ DEOptim<-R6::R6Class(
       if(length(list(...)) == 0) stop("Please supply parameters to optimize over.")
 
       self$deoptim_control <- deoptim_control
+      self$deoptim_control$trace <- FALSE
 
       args<-list(...)
       self$lower_bounds <- sapply(args, function(x) x[1])

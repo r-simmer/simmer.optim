@@ -29,7 +29,7 @@ GridOptim<-R6::R6Class(
         Filter(function(x) all(unlist(x$constraints)), intermediary_results)
 
       # stop if no instance available that satisfies constriants
-      if(length(results_filtered) == 0) stop("No instance(s) available were constraints were satisfied.")
+      if(length(results_filtered) == 0) stop("No instance(s) available where constraints are satisfied.")
 
       # extract objective values
       objs<-sapply(results_filtered, function(x) x$objective)

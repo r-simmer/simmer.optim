@@ -9,7 +9,7 @@ optim_results <- function(objective, constraints = list(), envs=NULL){
   res<-list(objective=objective,
             constraints=constraints,
             envs=envs)
-  class(res) <- "OptimResults"
+  attr(res, "class") <- "OptimResults"
   res
 }
 
@@ -31,10 +31,23 @@ opt_func <- function(...){
 #' Show the results of an optimization procedure
 #'
 #' @param optim_obj the optimization object
-
 #' @export
 results <- function(optim_obj){
-  optim_obj$results()
+  res<-optim_obj$results()
+  class(res) <- c('OptimResult', class(res))
+  res
+}
+
+#' @export
+print.OptimResult<-function(x, ...){
+  cat("Optimization result\n")
+  cat("========================\n")
+  cat("Objective value: ", x$objective,"\n\n")
+  cat("Params:\n")
+  for(p in names(x$params)){
+    cat(" -- ", p, ": ", x$params[[p]], "\n", sep="")
+  }
+  invisible(x)
 }
 
 #' (re)run a simmer expression using the optimized parameter list
