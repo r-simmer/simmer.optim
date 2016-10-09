@@ -7,9 +7,7 @@
 opt_func(...)
 }
 \arguments{
-\item{search_grid}{the grid to search over}
-
-\item{index}{the requested index}
+\item{...}{the options passed}
 }
 \value{
 a function which supplies the variables to test

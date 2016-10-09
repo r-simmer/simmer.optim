@@ -90,6 +90,6 @@ SAOptim<-R6::R6Class(
 #' @return the optimal combination of the variable possibilities supplied in \code{...}
 #' @import R6
 #' @export
-sa_optim<-function(sim_expr, objective = c("min", "max"), ...){
-  SAOptim$new(sim_expr, objective, ...)
+sa_optim<-function(sim_expr, objective = c("min", "max"), control=list(), ...){
+  SAOptim$new(sim_expr, objective, control, ...)
 }

@@ -1,3 +1,5 @@
+library(simmer)
+
 sim_prob_1<- function(){
   t0<-create_trajectory() %>%
     seize("nurse") %>%

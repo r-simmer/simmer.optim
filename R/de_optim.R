@@ -23,7 +23,6 @@ DEOptim<-R6::R6Class(
       if(length(list(...)) == 0) stop("Please supply parameters to optimize over.")
 
       self$deoptim_control <- deoptim_control
-      self$deoptim_control$trace <- FALSE
 
       args<-list(...)
       self$lower_bounds <- sapply(args, function(x) x[1])
@@ -85,11 +84,12 @@ DEOptim<-R6::R6Class(
 #'
 #' @param sim_expr a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}
 #' @param objective the type of objective to focus on, for now only \code{minimize} and \code{maximize}
+#' @param control an object of \code{RcppDE::DEoptim.control} to control the \code{DEoptim method}
 #' @param ... the named arguments and per argument an vector of length two defining the lower and upper bound of the search space, e.g. \code{var1=c(1,5), var2=c(3,5)}
 #'
 #' @return the optimal combination of the variable possibilities supplied in \code{...}
 #' @import R6
 #' @export
-de_optim<-function(sim_expr, objective = c("min", "max"), ...){
-  DEOptim$new(sim_expr, objective, ...)
+de_optim<-function(sim_expr, objective = c("min", "max"), deoptim_control = RcppDE::DEoptim.control(), ...){
+  DEOptim$new(sim_expr, objective, deoptim_control = deoptim_control, ...)
 }

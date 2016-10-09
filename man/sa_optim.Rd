@@ -4,7 +4,7 @@
 \alias{sa_optim}
 \title{A simmer differential evoltion optimizer}
 \usage{
-sa_optim(sim_expr, objective = c("min", "max"), ...)
+sa_optim(sim_expr, objective = c("min", "max"), control = list(), ...)
 }
 \arguments{
 \item{sim_expr}{a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}}

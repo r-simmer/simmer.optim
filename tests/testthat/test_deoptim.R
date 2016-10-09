@@ -7,7 +7,8 @@ test_that("no errors are returned",{
                 objective = "max",
                 nurse = as.integer(c(1,4)),
                 cardiologist = as.integer(c(1,4)),
-                deoptim_control = RcppDE::DEoptim.control(itermax = 2)
+                deoptim_control = RcppDE::DEoptim.control(itermax = 2,
+                                                          trace = F)
                 )
   }, NA)
 })
@@ -18,7 +19,8 @@ test_that("converges correctly",{
               objective = "max",
               nurse = as.integer(c(1,4)),
               cardiologist = as.integer(c(1,4)),
-              deoptim_control = RcppDE::DEoptim.control(itermax = 10)
+              deoptim_control = RcppDE::DEoptim.control(itermax = 10,
+                                                        trace = F)
   )
   expect_true(results(r)$objective >= 40 && results(r)$objective <= 50)
 })
@@ -30,7 +32,8 @@ test_that("works correctly with numeric values",{
   }
   r<-de_optim(fun,
               objective = "min",
-              x = c(.6, 2)
+              x = c(.6, 2),
+              deoptim_control = RcppDE::DEoptim.control(trace = F)
   )
   expect_equal(results(r)$params$x, .6)
 
@@ -42,7 +45,8 @@ test_that("works correctly with integer values",{
   }
   r<-de_optim(fun,
               objective = "min",
-              x = as.integer(c(1, 2))
+              x = as.integer(c(1, 2)),
+              deoptim_control = RcppDE::DEoptim.control(trace = F)
   )
   expect_equal(results(r)$params$x, 1)
 
@@ -54,10 +58,12 @@ test_that("works correctly with maximization and minimization", {
   }
   r_max<-de_optim(fun,
               objective="max",
-              x=c(1,2))
+              x=c(1,2),
+              deoptim_control = RcppDE::DEoptim.control(trace = F))
   r_min<-de_optim(fun,
                   objective="min",
-                  x=c(1,2))
+                  x=c(1,2),
+                  deoptim_control = RcppDE::DEoptim.control(trace = F))
 
 
   expect_equal(results(r_max)$objective, 2)

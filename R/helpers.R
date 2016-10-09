@@ -18,8 +18,7 @@ optim_results <- function(objective, constraints = list(), envs=NULL){
 #'
 #' Internal usage
 #'
-#' @param search_grid the grid to search over
-#' @param index the requested index
+#' @param ... the options passed
 #'
 #' @return a function which supplies the variables to test
 opt_func <- function(...){
