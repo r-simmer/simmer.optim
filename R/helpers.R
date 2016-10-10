@@ -5,13 +5,16 @@
 #' @param envs the simmer env (OPTIONAL)
 #'
 #' @export
-optim_results <- function(objective, constraints = list(), envs=NULL){
-  res<-list(objective=objective,
-            constraints=constraints,
-            envs=envs)
-  attr(res, "class") <- "OptimResults"
-  res
-}
+optim_results <-
+  function(objective,
+           constraints = list(),
+           envs = NULL) {
+    res <- list(objective = objective,
+                constraints = constraints,
+                envs = envs)
+    attr(res, "class") <- "OptimResults"
+    res
+  }
 
 
 #' Value function generator
@@ -21,8 +24,8 @@ optim_results <- function(objective, constraints = list(), envs=NULL){
 #' @param ... the options passed
 #'
 #' @return a function which supplies the variables to test
-opt_func <- function(...){
-  opts = list(...)
+opt_func <- function(...) {
+  opts <- list(...)
   function(name) opts[[name]]
 }
 
@@ -31,20 +34,20 @@ opt_func <- function(...){
 #'
 #' @param optim_obj the optimization object
 #' @export
-results <- function(optim_obj){
-  res<-optim_obj$results()
-  class(res) <- c('OptimResult', class(res))
+results <- function(optim_obj) {
+  res <- optim_obj$results()
+  class(res) <- c("OptimResult", class(res))
   res
 }
 
 #' @export
-print.OptimResult<-function(x, ...){
+print.OptimResult <- function(x, ...) {
   cat("Optimization result\n")
   cat("========================\n")
-  cat("Objective value: ", x$objective,"\n\n")
+  cat("Objective value: ", x$objective, "\n\n")
   cat("Params:\n")
-  for(p in names(x$params)){
-    cat(" -- ", p, ": ", x$params[[p]], "\n", sep="")
+  for (p in names(x$params)) {
+    cat(" -- ", p, ": ", x$params[[p]], "\n", sep = "")
   }
   invisible(x)
 }
@@ -57,13 +60,13 @@ print.OptimResult<-function(x, ...){
 #'
 #' @seealso results
 #' @export
-run_optimized<-function(optim_obj){
+run_optimized <- function(optim_obj) {
   message("Running sim expression with optimized parameters")
   message("------------------------------------------------")
   params <- results(optim_obj)$params
-  for(p in names(params)){
+  for (p in names(params)) {
     message(p, ": ", params[p])
   }
   sim_expr <- optim_obj$sim_expr
-  do.call(run_instance, c(params, list(sim_expr=sim_expr)))$envs
+  do.call(run_instance, c(params, list(sim_expr = sim_expr)))$envs
 }

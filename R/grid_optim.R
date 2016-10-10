@@ -1,38 +1,44 @@
 
-GridOptim<-R6::R6Class(
+
+GridOptim <- R6::R6Class(
   "GridOptim",
-  inherit=SimmerOptim,
-  public=list(
-    search_grid=NA,
-    print = function(){
+  inherit = SimmerOptim,
+  public = list(
+    search_grid = NA,
+    print = function() {
       cat("A SimmerOptim instance of type Grid Optimization\n")
     },
-    initialize = function(sim_expr, objective = c("min","max"), ...){
+    initialize = function(sim_expr, objective = c("min", "max"), ...) {
       objective <- match.arg(objective)
       super$initialize(sim_expr, objective)
-      if(length(list(...)) == 0) stop("Please supply parameters to optimize over.")
+      if (length(list(...)) == 0)
+        stop("Please supply parameters to optimize over.")
 
-      self$search_grid<-data.frame(expand.grid(list(...)))
+      self$search_grid <- data.frame(expand.grid(list(...)))
 
       self$optimize()
     },
-    optimize = function(){
-      intermediary_results<-
-        lapply(1:NROW(self$search_grid), function(i){
-          res<-do.call(super$run_instance, self$search_grid[i, , drop=FALSE])
+    optimize = function() {
+      intermediary_results <-
+        lapply(1:NROW(self$search_grid), function(i) {
+          res <- do.call(super$run_instance,
+                         self$search_grid[i, , drop = FALSE])
           res$index <- i
           res
         })
 
       # remove constraint violations
       results_filtered <-
-        Filter(function(x) all(unlist(x$constraints)), intermediary_results)
+        Filter(function(x)
+          all(unlist(x$constraints)), intermediary_results)
 
       # stop if no instance available that satisfies constriants
-      if(length(results_filtered) == 0) stop("No instance(s) available where constraints are satisfied.")
+      if (length(results_filtered) == 0)
+        stop("No instance(s) available where constraints are satisfied.")
 
       # extract objective values
-      objs<-sapply(results_filtered, function(x) x$objective)
+      objs <- sapply(results_filtered, function(x)
+        x$objective)
 
       # selector func
 
@@ -44,11 +50,15 @@ GridOptim<-R6::R6Class(
       best_run <- results_filtered[[select_func(objs)]]
       best_grid_row <- results_filtered[[select_func(objs)]]$index
 
-      super$results(objective = best_run$objective,
-                    params = as.list(self$search_grid[best_grid_row, , drop=FALSE]),
-                    best_run = best_run)
+      super$results(
+        objective = best_run$objective,
+        params = as.list(self$search_grid[best_grid_row, , drop =
+                                            FALSE]),
+        best_run = best_run
+      )
     }
-  ))
+  )
+)
 
 
 #' A simmer grid optimizer
@@ -60,6 +70,6 @@ GridOptim<-R6::R6Class(
 #' @return the optimal combination of the variable possibilities supplied in \code{...}
 #' @import R6
 #' @export
-grid_optim<-function(sim_expr, objective = c("min", "max"), ...){
+grid_optim <- function(sim_expr, objective = c("min", "max"), ...) {
   GridOptim$new(sim_expr, objective, ...)
 }
