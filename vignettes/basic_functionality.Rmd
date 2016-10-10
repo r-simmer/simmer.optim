@@ -2,7 +2,8 @@
 title: "Basic Functionality"
 author: "Bart Smeets, Iñaki Ucar"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Basic Functionality}
   %\VignetteEngine{knitr::rmarkdown}
@@ -13,6 +14,15 @@ vignette: >
 knitr::opts_chunk$set(warning=F,
                       message=F)
 ```
+
+```{r, eval=FALSE, include=FALSE}
+# to generate output file, for some reason the readme func of html vignette gives an error
+rmarkdown::render("vignettes/basic_functionality.Rmd", 
+                  output_format = "md_document", 
+                  output_dir = ".",
+                  output_file = "README.md")
+```
+
 
 
 _generated with version `r packageVersion("simmer.optim")`_
@@ -53,7 +63,7 @@ t0<-create_trajectory() %>%
   timeout(function() rpois(1, 20)) %>%
   release("cardiologist")
 
-env<-simmer() %>%
+env <- simmer() %>%
   add_generator("patient", t0, at(seq(0,60*4, 15))) %>%
   add_resource("nurse", 1) %>%
   add_resource("cardiologist", 1) %>%
@@ -71,14 +81,14 @@ plot_evolution_arrival_times(env, "waiting_time")
 The number of patients served in this process is:
 
 ```{r}
-get_mon_arrivals(env) %>% 
+get_mon_arrivals(env) %>%
   nrow()
 ```
 
 While the number of patients served before the planned end of the consultation (after 4 hours) is:
 
 ```{r}
-get_mon_arrivals(env) %>% 
+get_mon_arrivals(env) %>%
   filter(end_time < 4*60) %>%
   nrow()
 ```
@@ -247,7 +257,7 @@ As we can see, the results are pretty similar and seem to confirm our earlier fi
 
 For now, three different optimizers are available:
 
-__Grid optimization__
+### Grid optimization
 
 The grid optimization [algorithm](https://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search) starts by building a grid with all the possible combination of the values you supply to it. In essence this comes down to an exhausive search of the parameter space. The upside of this is that it will always return the most optimum value, the downside is that it can take a long time to find this optimal value.
 
@@ -261,7 +271,7 @@ r <- grid_optim(sim_case,
 results(r)
 ```
 
-__Simulated annealing__
+### Simulated annealing
 
 Simulated annealing is a [heuristic method](https://en.wikipedia.org/wiki/Simulated_annealing) that _tries_ to find a good solution. Finding the optimum combination of parameters is however not guaranteed. `simmer.optim` leverages the `GenSA` package to perform simmulated annealing. Note that it is important to explicitely pass `integer` type values if the value has to be interpreted as an integer, this is due to the fact that a cardinality constraint is applied to the parameter in the optimization procedure.
 
@@ -276,7 +286,7 @@ r <- sa_optim(sim_case,
 results(r)
 ```
 
-## Differential evolution
+### Differential evolution
 
 Differential evolition is a [heuristic method](https://en.wikipedia.org/wiki/Differential_evolution) that _tries_ to find a good solution. Finding the optimum combination of parameters is however not guaranteed. `simmer.optim` leverages the `RcppDE` package to perform differential evolution. Note that it is important to explicitely pass `integer` type values if the value has to be interpreted as an integer, this is due to the fact that a cardinality constraint is applied to the parameter in the optimization procedure.
 
