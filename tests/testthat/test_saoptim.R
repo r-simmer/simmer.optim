@@ -17,9 +17,9 @@ test_that("converges correctly",{
               objective = "max",
               nurse = as.integer(c(1,4)),
               cardiologist = as.integer(c(1,4)),
-              control = list(max.call = 200))
+              control = list(max.call = 600))
 
-  expect_true(results(r)$objective >= 40 && results(r)$objective <= 50)
+  expect_true(results(r)$objective >= 40 && results(r)$objective <= 60)
 })
 
 
