@@ -11,6 +11,8 @@ sa_optim(sim_expr, objective = c("min", "max"), control = list(), ...)
 
 \item{objective}{the type of objective to focus on, for now only \code{minimize} and \code{maximize}}
 
+\item{control}{a list object of specifying the \code{control} parameters of \code{GenSA}, checkout \code{?GenSA::GenSA}}
+
 \item{...}{the named arguments and per argument an vector of length two defining the lower and upper bound of the search space, e.g. \code{var1=c(1,5), var2=c(3,5)}}
 }
 \value{

@@ -12,9 +12,9 @@ de_optim(sim_expr, objective = c("min", "max"),
 
 \item{objective}{the type of objective to focus on, for now only \code{minimize} and \code{maximize}}
 
-\item{...}{the named arguments and per argument an vector of length two defining the lower and upper bound of the search space, e.g. \code{var1=c(1,5), var2=c(3,5)}}
+\item{deoptim_control}{an object of \code{RcppDE::DEoptim.control} to control the \code{DEoptim method}}
 
-\item{control}{an object of \code{RcppDE::DEoptim.control} to control the \code{DEoptim method}}
+\item{...}{the named arguments and per argument an vector of length two defining the lower and upper bound of the search space, e.g. \code{var1=c(1,5), var2=c(3,5)}}
 }
 \value{
 the optimal combination of the variable possibilities supplied in \code{...}

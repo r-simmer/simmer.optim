@@ -14,5 +14,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    simmer (>= 3.2.0)
+    simmer (>= 3.2.0),
+    RcppDE,
+    GenSA,
+    dplyr
 VignetteBuilder: knitr

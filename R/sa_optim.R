@@ -85,11 +85,14 @@ SAOptim<-R6::R6Class(
 #'
 #' @param sim_expr a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}
 #' @param objective the type of objective to focus on, for now only \code{minimize} and \code{maximize}
+#' @param control a list object of specifying the \code{control} parameters of \code{GenSA}, checkout \code{?GenSA::GenSA}
 #' @param ... the named arguments and per argument an vector of length two defining the lower and upper bound of the search space, e.g. \code{var1=c(1,5), var2=c(3,5)}
 #'
 #' @return the optimal combination of the variable possibilities supplied in \code{...}
 #' @import R6
 #' @export
 sa_optim<-function(sim_expr, objective = c("min", "max"), control=list(), ...){
+  dep <- requireNamespace("GenSA")
+  if(!dep) stop("Please install package 'GenSA' before continuing")
   SAOptim$new(sim_expr, objective, control, ...)
 }
