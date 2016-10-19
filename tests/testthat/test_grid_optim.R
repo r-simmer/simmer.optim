@@ -1,13 +1,28 @@
 source("sim_probs.R")
+library(dplyr)
 context("grid optimization")
 
 
 
 test_that("no errors are returned", {
   expect_error({
-    r <- grid_optim(
-      sim_prob_1,
-      objective = "max",
+    r <- simmer_optim(model = sim_prob_1,
+                      method = grid_optim,
+                      direction = "max",
+                      objective = msr_arrivals_finished,
+                      constraints = list(function(envs){
+                        cost_nurse <- 40
+                        cost_cardiologist <- 100
+                        print(msr_runtime(envs))
+                        print(msr_resource_amount(envs, "nurse"))
+                        total_cost <-
+                          msr_runtime(envs)/60 * msr_resource_amount(envs, "nurse") * cost_nurse +
+                          msr_runtime(envs)/60 * msr_resource_amount(envs, "cardiologist") * cost_cardiologist
+
+                        print(total_cost)
+
+                        total_cost < 2000
+                      }),
       nurse = 1:4,
       cardiologist = 1
     )

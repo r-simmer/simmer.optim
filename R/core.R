@@ -1,4 +1,4 @@
-#' Instantiate a simmer expression
+#' Run n simmer models
 #'
 #' @param model the simmer model
 #' @param rep the number of replications
