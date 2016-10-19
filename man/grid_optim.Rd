@@ -4,12 +4,17 @@
 \alias{grid_optim}
 \title{A simmer grid optimizer}
 \usage{
-grid_optim(sim_expr, objective = c("min", "max"), ...)
+grid_optim(model, direction = c("min", "max"), objective, constraints,
+  rep = 1, ...)
 }
 \arguments{
-\item{sim_expr}{a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}}
+\item{model}{a function which runs a simmer model}
 
-\item{objective}{the type of objective to focus on, for now only \code{minimize} and \code{maximize}}
+\item{direction}{optmization direction to focus on, for now only \code{min} and \code{max}}
+
+\item{objective}{the objective measure}
+
+\item{constraints}{a list of constraint functions}
 
 \item{...}{the named arguments and related vectors to optimize over, e.g. \code{var1=1:5, var2=3:5}}
 }

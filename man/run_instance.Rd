@@ -4,12 +4,14 @@
 \alias{run_instance}
 \title{Instantiate a simmer expression}
 \usage{
-run_instance(sim_expr, ...)
+run_instance(model, rep = 1, ...)
 }
 \arguments{
-\item{sim_expr}{the simmer expression}
+\item{model}{the simmer model}
 
-\item{...}{named parameters to be passed to the simmer expression}
+\item{rep}{the number of replications}
+
+\item{...}{named parameters to be passed to the simmer expression and accessbile through the \code{.opt} variable}
 }
 \description{
 Instantiate a simmer expression
