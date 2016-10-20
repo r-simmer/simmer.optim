@@ -4,13 +4,13 @@
 \alias{de_optim}
 \title{A simmer differential evoltion optimizer}
 \usage{
-de_optim(sim_expr, objective = c("min", "max"),
-  deoptim_control = RcppDE::DEoptim.control(), ...)
+de_optim(model, direction = c("min", "max"), objective, constraints, params,
+  control, big_m = 1e+06)
 }
 \arguments{
-\item{sim_expr}{a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}}
-
 \item{objective}{the type of objective to focus on, for now only \code{minimize} and \code{maximize}}
+
+\item{sim_expr}{a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}}
 
 \item{deoptim_control}{an object of \code{RcppDE::DEoptim.control} to control the \code{DEoptim method}}
 

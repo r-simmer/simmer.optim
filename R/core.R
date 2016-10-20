@@ -1,3 +1,33 @@
+#' @export
+simmer_optim <- function(model,
+                         method,
+                         direction = "max",
+                         objective = msr_arrivals_finished,
+                         constraints,
+                         params = list(),
+                         control = optim_control(),
+                         ...){
+
+  if (length(params) == 0)
+    stop("Please supply parameters to optimize over.")
+
+  control <- modifyList(optim_control(), control)
+
+  r<-method(model = model,
+            direction = direction,
+            objective = objective,
+            constraints = constraints,
+            params = params,
+            control = control,
+            ...)
+
+  if(!is(r, "MethodResults"))
+    stop("Optimization method should return a MethodResults object (created by 'method_results')")
+
+  r
+
+}
+
 #' Run n simmer models
 #'
 #' @param model the simmer model
@@ -69,33 +99,6 @@ method_results<-function(method, objective_value, constraints_satisfied, params,
 }
 
 
-#' @export
-simmer_optim <- function(model,
-                         method,
-                         direction = "max",
-                         objective = msr_arrivals_finished,
-                         constraints,
-                         params = list(),
-                         control = optim_control()){
-
-  if (length(params) == 0)
-    stop("Please supply parameters to optimize over.")
-
-  control <- modifyList(optim_control(), control)
-
-  r<-method(model = model,
-            direction = direction,
-            objective = objective,
-            constraints = constraints,
-            params = params,
-            control = control)
-
-  if(!is(r, "MethodResults"))
-    stop("Optimization method should return a MethodResults object (created by 'method_results')")
-
-  r
-
-}
 
 #' @export
 print.MethodResults<-function(x, ...){

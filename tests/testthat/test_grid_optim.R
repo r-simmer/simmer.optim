@@ -37,7 +37,7 @@ test_that("no errors are with multiple envs", {
 
 test_that("converges correctly", {
   r <- simmer_optim(model=sim_prob_1,
-                    method = grid_optim,
+                    method = de_optim,
                     direction = "max",
                     objective = msr_arrivals_finished,
                     constraints = list(sim_prob_1_constraint),
