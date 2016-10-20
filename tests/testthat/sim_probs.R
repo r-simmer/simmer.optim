@@ -32,6 +32,18 @@ sim_prob_1 <- function() {
 
 }
 
+sim_prob_1_constraint<-
+  function(envs){
+    cost_nurse <- 40
+    cost_cardiologist <- 100
+
+    total_cost <-
+      msr_runtime(envs)/60 * msr_resource_amount(envs, "nurse") * cost_nurse +
+      msr_runtime(envs)/60 * msr_resource_amount(envs, "cardiologist") * cost_cardiologist
+
+    total_cost < 2000
+  }
+
 sim_prob_2 <- function() {
   t0 <- create_trajectory() %>%
     seize("nurse") %>%
