@@ -13,55 +13,54 @@ test_that("no errors are returned", {
                       constraints = list(function(envs){
                         cost_nurse <- 40
                         cost_cardiologist <- 100
-                        print(msr_runtime(envs))
-                        print(msr_resource_amount(envs, "nurse"))
+
                         total_cost <-
                           msr_runtime(envs)/60 * msr_resource_amount(envs, "nurse") * cost_nurse +
                           msr_runtime(envs)/60 * msr_resource_amount(envs, "cardiologist") * cost_cardiologist
 
-                        print(total_cost)
-
                         total_cost < 2000
                       }),
-      nurse = 1:4,
-      cardiologist = 1
-    )
+                      control = optim_control(run_args = list(until = 8 * 60)),
+                      params = opt_params(
+                        nurse = par_discrete(1:4),
+                        cardiologist = par_discrete(1)))
   }, NA)
 })
 
 
 test_that("no errors are with multiple envs", {
   expect_error({
-    r <- grid_optim(
-      sim_prob_2,
-      objective = "max",
-      nurse = 1:4,
-      cardiologist = 1
-    )
+    r <- simmer_optim(model = sim_prob_1,
+                      method = grid_optim,
+                      direction = "max",
+                      objective = msr_arrivals_finished,
+                      constraints = list(function(envs){
+                        cost_nurse <- 40
+                        cost_cardiologist <- 100
+
+                        total_cost <-
+                          msr_runtime(envs)/60 * msr_resource_amount(envs, "nurse") * cost_nurse +
+                          msr_runtime(envs)/60 * msr_resource_amount(envs, "cardiologist") * cost_cardiologist
+
+                        total_cost < 2000
+                      }),
+                      control = optim_control(run_args = list(until = 8 * 60),
+                                              rep = 100),
+                      params = list(
+                        nurse = par_discrete(1:4),
+                        cardiologist = par_discrete(1)))
   }, NA)
 })
 
 
-test_that("converges correctly outside simmer env", {
-  test_fun <- function() {
-    optim_results(objective = abs(.opt("x") - .opt("y")))
-  }
-
-  r <- grid_optim(test_fun,
-                  objective = "min",
-                  x = 0:4,
-                  y = 0:4)
-
-  expect_equal(r$results()$params$x, r$results()$params$y)
-})
-
-
 test_that("converges correctly", {
-  r <- grid_optim(
-    sim_prob_1,
-    objective = "max",
-    nurse = 1:4,
-    cardiologist = 1:4
+  r <- simmer_optim(model=sim_prob_1,
+                    method = grid_optim,
+    direction = "max",
+    params = list(
+      nurse = par_discrete(1:4),
+      cardiologist = par_discrete(1:4)
+    )
   )
   expect_true(results(r)$objective >= 40 &&
                 results(r)$objective <= 50)

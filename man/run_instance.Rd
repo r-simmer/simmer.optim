@@ -2,9 +2,9 @@
 % Please edit documentation in R/core.R
 \name{run_instance}
 \alias{run_instance}
-\title{Instantiate a simmer expression}
+\title{Run n simmer models}
 \usage{
-run_instance(model, rep = 1, ...)
+run_instance(model, control, params)
 }
 \arguments{
 \item{model}{the simmer model}
@@ -14,6 +14,6 @@ run_instance(model, rep = 1, ...)
 \item{...}{named parameters to be passed to the simmer expression and accessbile through the \code{.opt} variable}
 }
 \description{
-Instantiate a simmer expression
+Run n simmer models
 }
 

@@ -5,12 +5,18 @@
 #' @param ... named parameters to be passed to the simmer expression and accessbile through the \code{.opt} variable
 #'
 #' @export
-run_instance <- function(model, rep=1, ...){
+run_instance <- function(model, control, params){
+  rep <- control$replications
+  run_args <- control$run_args
 
+  # for now run_args only contains unitl but can be used for e.g. warmups etc later
   temp_env <- new.env(parent = globalenv())
-  assign(".opt", opt_func(...), envir = temp_env)
+  assign(".opt", opt_func(params), envir = temp_env)
+
   lapply(1:rep, function(i){
-    simmer::run(eval(body(model), envir = temp_env))
+    do.call(simmer::run, c(
+            list(env = eval(body(model), envir = temp_env)),
+              run_args))
   })
 }
 
@@ -51,7 +57,7 @@ with_args<-function(f, ...){
 
 
 #' @export
-method_results<-function(method, objective_value, constraints_satisfied, params = list(), envs = NULL, extra_info = list()){
+method_results<-function(method, objective_value, constraints_satisfied, params, control, envs, extra_info = list()){
   r <- list(method = method,
             objective_value = objective_value,
             constraints_satisfied = constraints_satisfied,
@@ -69,13 +75,25 @@ simmer_optim <- function(model,
                          direction = "max",
                          objective = msr_arrivals_finished,
                          constraints,
-                         rep = 1,
-                         ...){
+                         params = list(),
+                         control = optim_control()){
 
+  if (length(params) == 0)
+    stop("Please supply parameters to optimize over.")
 
-  r<-method(model, direction, objective, constraints, rep, ...)
+  control <- modifyList(optim_control(), control)
+
+  r<-method(model = model,
+            direction = direction,
+            objective = objective,
+            constraints = constraints,
+            params = params,
+            control = control)
+
   if(!is(r, "MethodResults"))
     stop("Optimization method should return a MethodResults object (created by 'method_results')")
+
+  r
 
 }
 
@@ -101,3 +119,4 @@ print.MethodResults<-function(x, ...){
     }
   }
 }
+

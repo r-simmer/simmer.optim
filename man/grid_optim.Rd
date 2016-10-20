@@ -4,8 +4,8 @@
 \alias{grid_optim}
 \title{A simmer grid optimizer}
 \usage{
-grid_optim(model, direction = c("min", "max"), objective, constraints,
-  rep = 1, ...)
+grid_optim(model, direction = c("min", "max"), objective, constraints, params,
+  control)
 }
 \arguments{
 \item{model}{a function which runs a simmer model}

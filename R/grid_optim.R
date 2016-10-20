@@ -9,24 +9,26 @@
 #' @return the optimal combination of the variable possibilities supplied in \code{...}
 #' @import R6
 #' @export
-grid_optim <- function(model, direction = c("min", "max"), objective, constraints, rep=1, ...) {
+grid_optim <- function(model, direction = c("min", "max"), objective, constraints, params, control) {
   direction <- match.arg(direction)
-
-  if (length(list(...)) == 0)
-    stop("Please supply parameters to optimize over.")
-
-  search_grid <- data.frame(expand.grid(list(...)))
+  search_grid <- data.frame(expand.grid(params))
 
   # construct different envs
   intermediary_results <-
     lapply(1:NROW(search_grid), function(i) {
-      envs <- do.call(run_instance, c(list(model=model, rep=rep), as.list(search_grid[i, , drop = FALSE])))
+
+      args <- list(model=model,
+                   control = control,
+                   params = as.list(search_grid[i, , drop = FALSE]))
+
+      envs <- do.call(run_instance, args)
+
       list(
         envs = envs,
         objective_value = objective_evaluator(envs, objective),
         constraints_satisfied = constraints_evaluator(envs, constraints),
         index = i
-        )
+      )
 
     })
 
@@ -44,7 +46,6 @@ grid_optim <- function(model, direction = c("min", "max"), objective, constraint
     x$objective_value)
 
   # selector func
-
   select_func <-
     switch(direction,
            "min" = which.min,
@@ -54,7 +55,7 @@ grid_optim <- function(model, direction = c("min", "max"), objective, constraint
 
   best_grid_row <- results_filtered[[select_func(objs)]]$index
 
-    method_results(
+  method_results(
     method = "grid_optim",
     objective_value = best_run$objective_value,
     constraints_satisfied = all(unlist(best_run$constraints_satisfied)),

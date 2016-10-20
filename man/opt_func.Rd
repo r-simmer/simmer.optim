@@ -4,7 +4,7 @@
 \alias{opt_func}
 \title{Value function generator}
 \usage{
-opt_func(...)
+opt_func(params)
 }
 \arguments{
 \item{...}{the options passed}

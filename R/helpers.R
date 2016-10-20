@@ -22,11 +22,10 @@ optim_results <-
 #' Internal usage
 #'
 #' @param ... the options passed
-#'
+#' @export
 #' @return a function which supplies the variables to test
-opt_func <- function(...) {
-  opts <- list(...)
-  function(name) opts[[name]]
+opt_func <- function(params) {
+  function(name) params[[name]]
 }
 
 
