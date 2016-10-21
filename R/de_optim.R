@@ -1,3 +1,5 @@
+# TODO: seems to be a problem with parallel in de_optim
+
 
 #' A simmer differential evoltion optimizer
 #'
@@ -63,7 +65,10 @@ de_optim <- function(model,
     cons <- constraints_evaluator(envs, constraints)
     obj_val <- objective_evaluator(envs, objective) * obj_coeff
     if(!all(unlist(cons))){
-      obj_val <- obj_val + (control$big_m * -obj_coeff)
+      # print(cons)
+      # cat("obj:  ", obj_val,"\n")
+      obj_val <- obj_val + (big_m * -obj_coeff)
+      # cat("obj2:  ", obj_val,"\n")
     }
 
     obj_val
@@ -84,7 +89,7 @@ de_optim <- function(model,
 
   method_results(method = "de_optim",
                  objective_value = r$optim$bestval * obj_coeff,
-                 constraints_satisfied =  abs(r$optim$bestval) < big_m,
+                 constraints_satisfied =  r$optim$bestval < big_m * obj_coeff,
                  params = best_params,
                  envs = NULL)
 

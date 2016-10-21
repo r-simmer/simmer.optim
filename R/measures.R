@@ -1,4 +1,5 @@
 #' @export
+#' @import dplyr
 msr_arrivals_finished<-function(envs, agg = mean){
   get_mon_arrivals(envs) %>%
     group_by(replication) %>%
