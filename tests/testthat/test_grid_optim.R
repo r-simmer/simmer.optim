@@ -1,5 +1,4 @@
 source("sim_probs.R")
-library(dplyr)
 context("grid optimization")
 
 

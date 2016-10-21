@@ -39,18 +39,27 @@ run_instance <- function(model, control, params){
   rep <- control$replications
   run_args <- control$run_args
 
-  # for now run_args only contains unitl but can be used for e.g. warmups etc later
   temp_env <- new.env(parent = globalenv())
   assign(".opt", opt_func(params), envir = temp_env)
 
-  lapply(1:rep, function(i){
-    do.call(simmer::run, c(
-            list(env = eval(body(model), envir = temp_env)),
-              run_args))
-  })
+  if(control$parallel){
+    envs <- parallel::mclapply(1:rep, function(i){
+      env <- do.call(simmer::run, c(
+        list(env = eval(body(model), envir = temp_env)),
+        run_args))
+     envs <- simmer::wrap(env)
+     envs
+    })
+  } else {
+    envs <- lapply(1:rep, function(i){
+      do.call(simmer::run, c(
+        list(env = eval(body(model), envir = temp_env)),
+        run_args))
+    })
+  }
+  envs
+
 }
-
-
 
 #' @export
 objective_evaluator<-function(envs, objective){
