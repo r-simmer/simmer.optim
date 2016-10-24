@@ -13,6 +13,12 @@ grid_optim <- function(model, direction = c("min", "max"), objective, constraint
   direction <- match.arg(direction)
   search_grid <- data.frame(expand.grid(params))
 
+  if(control$verbose){
+    cat("Running grid optimization procedure", "\n")
+    pb <- txtProgressBar(style=3)
+  }
+
+
   # construct different envs
   intermediary_results <-
     lapply(1:NROW(search_grid), function(i) {
@@ -23,14 +29,21 @@ grid_optim <- function(model, direction = c("min", "max"), objective, constraint
 
       envs <- do.call(run_instance, args)
 
-      list(
+      res <- list(
         envs = envs,
         objective_value = objective_evaluator(envs, objective),
         constraints_satisfied = constraints_evaluator(envs, constraints),
         index = i
       )
 
+      if(control$verbose) setTxtProgressBar(pb, i/NROW(search_grid))
+      res
     })
+
+  if(control$verbose){
+    close(pb)
+    cat("\n\n")
+  }
 
   # remove constraint violations
   results_filtered <-

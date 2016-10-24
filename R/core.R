@@ -47,8 +47,7 @@ run_instance <- function(model, control, params){
       env <- do.call(simmer::run, c(
         list(env = eval(body(model), envir = temp_env)),
         run_args))
-     envs <- simmer::wrap(env)
-     envs
+      simmer::wrap(env)
     })
   } else {
     envs <- lapply(1:rep, function(i){
@@ -112,8 +111,7 @@ method_results<-function(method, objective_value, constraints_satisfied, params,
 #' @export
 print.MethodResults<-function(x, ...){
   cat("simmer.optim result", "\n")
-  cat("===\n")
-
+  cat("\n")
   cat("method:                ", x$method, "\n")
   cat("objective value:       ", x$objective_value, "\n")
   cat("constraints satisfied: ", x$constraints_satisfied, "\n\n")
