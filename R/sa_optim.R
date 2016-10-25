@@ -1,97 +1,3 @@
-
-
-
-
-SAOptim <- R6::R6Class(
-  "SAOptim",
-  inherit = SimmerOptim,
-  public = list(
-    big_M = 1e9,
-    obj_coeff = NULL,
-    lower_bounds = NULL,
-    upper_bounds = NULL,
-    integer_vals = NULL,
-    print = function() {
-      cat("A SimmerOptim instance of type Simulated Annealing\n")
-    },
-    initialize = function(sim_expr,
-                          objective = c("min", "max"),
-                          control = list(),
-                          ...) {
-      objective <- match.arg(objective)
-      super$initialize(sim_expr, objective)
-
-      self$obj_coeff <- switch(objective,
-                               max = -1,
-                               min = 1)
-
-      if (length(list(...)) == 0)
-        stop("Please supply parameters to optimize over.")
-
-      args <- list(...)
-      self$lower_bounds <- sapply(args, function(x)
-        x[1])
-      self$upper_bounds <- sapply(args, function(x)
-        x[2])
-      self$integer_vals <- sapply(self$lower_bounds, is.integer)
-
-      # convert everything to numeric (gensa can't handle integer vals natively)
-      self$lower_bounds <- sapply(self$lower_bounds, as.numeric)
-      self$upper_bounds <- sapply(self$upper_bounds, as.numeric)
-
-      self$optimize(control)
-    },
-    convert_obj_value = function(results) {
-      constraints_met <- all(unlist(results$constraints))
-      if (!constraints_met) {
-        self$big_M * -self$obj_coeff
-      } else {
-        results$objective * self$obj_coeff
-      }
-    },
-    optimize = function(control) {
-      fn <- function(func_params) {
-        arg_names <- names(self$lower_bounds)
-        named_args <- list()
-        for (i in seq_along(arg_names)) {
-          if (self$integer_vals[i])
-            named_args[[arg_names[i]]] <- round(func_params[[i]])
-          else
-            named_args[[arg_names[i]]] <- func_params[[i]]
-        }
-        obj <- do.call(super$run_instance, named_args)
-
-        self$convert_obj_value(obj)
-      }
-
-      res <- GenSA::GenSA(
-        par = NULL,
-        fn = fn,
-        lower = self$lower_bounds,
-        upper = self$upper_bounds,
-        control = control
-      )
-
-
-      params <- res$par
-      names(params) <- names(self$lower_bounds)
-      for (i in seq_along(params)) {
-        if (self$integer_vals[i])
-          params[i] <- round(params[i])
-      }
-
-      params <- as.list(params)
-
-      super$results(
-        objective = res$value * self$obj_coeff,
-        params = params,
-        iters = res$counts
-      )
-    }
-  )
-)
-
-
 #' A simmer differential evoltion optimizer
 #'
 #' Implements the functionality of the \code{DEoptim} package.
@@ -104,13 +10,90 @@ SAOptim <- R6::R6Class(
 #' @return the optimal combination of the variable possibilities supplied in \code{...}
 #' @import R6
 #' @export
-sa_optim <-
-  function(sim_expr,
-           objective = c("min", "max"),
-           control = list(),
-           ...) {
+sa_optim <- function(model,
+                     direction = c("min", "max"),
+                     objective,
+                     constraints,
+                     params,
+                     control,
+                     big_m = 1e6){
+
     dep <- requireNamespace("GenSA")
     if (!dep)
       stop("Please install package 'GenSA' before continuing")
-    SAOptim$new(sim_expr, objective, control, ...)
+
+    if(is.list(control$sa_optim)){
+      sa_optim_ctrl <- control$sa_optim
+    } else {
+      sa_optim_ctrl <- list()
+    }
+
+    obj_coeff <- switch(direction,
+                        max = -1,
+                        min = 1)
+
+    lower_bounds <- sapply(params, function(x) x[1])
+    upper_bounds <- sapply(params, function(x) x[length(x)])
+
+    param_types <- sapply(params, function(x){
+      if(is(x, "ParDiscrete")){
+        "ParDiscrete"
+      } else {
+        "ParContinuous"
+      }
+    })
+    param_names <- names(params)
+
+
+    fn <- function(func_params) {
+      func_params <- lapply(1:length(func_params), function(i){
+        if(param_types[[i]] == "ParDiscrete"){
+          round(func_params[[i]])
+        } else {
+          func_params[[i]]
+        }
+      })
+
+      names(func_params) <- param_names
+
+      args <- list(model=model,
+                   control = control,
+                   params = func_params)
+
+      envs <- do.call(run_instance, args)
+      cons <- constraints_evaluator(envs, constraints)
+      obj_val <- objective_evaluator(envs, objective) * obj_coeff
+
+      if(!all(unlist(cons))){
+        obj_val <- big_m * -obj_coeff
+      }
+
+      obj_val
+    }
+
+    res <- GenSA::GenSA(
+      par = NULL,
+      fn = fn,
+      lower = as.numeric(lower_bounds),
+      upper = as.numeric(upper_bounds),
+      control = sa_optim_ctrl
+    )
+
+
+    best_params <- as.list(res$par)
+    names(best_params) <- param_names
+
+    for(k in names(best_params)){
+      if(param_types[[k]] == "ParDiscrete"){
+        best_params[[k]] <- round(best_params[[k]])
+      }
+    }
+
+    method_results(
+      method = "sa_optim",
+      objective_value = res$value * obj_coeff,
+      constraints_satisfied = res$value != big_m * -obj_coeff,
+      params = best_params,
+      envs = NULL
+    )
   }

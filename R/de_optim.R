@@ -66,7 +66,7 @@ de_optim <- function(model,
     obj_val <- objective_evaluator(envs, objective) * obj_coeff
 
     if(!all(unlist(cons))){
-      obj_val <- obj_val + (big_m * -obj_coeff)
+      obj_val <- big_m * -obj_coeff
     }
 
     obj_val
@@ -87,7 +87,7 @@ de_optim <- function(model,
 
   method_results(method = "de_optim",
                  objective_value = r$optim$bestval * obj_coeff,
-                 constraints_satisfied =  r$optim$bestval < big_m * -obj_coeff,
+                 constraints_satisfied = r$optim$bestval != big_m * -obj_coeff,
                  params = best_params,
                  envs = NULL)
 

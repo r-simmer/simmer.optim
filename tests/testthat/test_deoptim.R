@@ -66,8 +66,8 @@ test_that("converges correctly with parallel runs", {
                     constraints = list(sim_prob_1_constraint),
                     control = optim_control(run_args = list(until = 8 * 60),
                                             rep = 2,
-                                            de_optim = RcppDE::DEoptim.control(itermax = 10,
-                                                                               trace = T),
+                                            de_optim = RcppDE::DEoptim.control(itermax = 20,
+                                                                               trace = F),
                                             parallel = TRUE),
                     params = list(
                       nurse = par_discrete(1:4),

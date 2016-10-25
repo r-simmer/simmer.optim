@@ -4,14 +4,15 @@
 \alias{sa_optim}
 \title{A simmer differential evoltion optimizer}
 \usage{
-sa_optim(sim_expr, objective = c("min", "max"), control = list(), ...)
+sa_optim(model, direction = c("min", "max"), objective, constraints, params,
+  control, big_m = 1e+06)
 }
 \arguments{
-\item{sim_expr}{a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}}
-
 \item{objective}{the type of objective to focus on, for now only \code{minimize} and \code{maximize}}
 
 \item{control}{a list object of specifying the \code{control} parameters of \code{GenSA}, checkout \code{?GenSA::GenSA}}
+
+\item{sim_expr}{a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}}
 
 \item{...}{the named arguments and per argument an vector of length two defining the lower and upper bound of the search space, e.g. \code{var1=c(1,5), var2=c(3,5)}}
 }
