@@ -4,12 +4,12 @@
 #' @param agg the method of aggregation of per replication results
 #'
 #' @export
-#' @import dplyr
 msr_arrivals_finished<-function(envs, agg = mean){
-  get_mon_arrivals(envs) %>%
-    group_by_("replication") %>%
-    summarise(finished = n()) %>%
-    .$finished %>%
+  tmp <- get_mon_arrivals(envs) %>%
+    dplyr::group_by_("replication") %>%
+    dplyr::summarise(finished = n()) %>%
+
+  tmp$finished %>%
     agg
 }
 
@@ -50,17 +50,17 @@ msr_resource_capacity<-function(envs, name, agg = mean){
 msr_resource_utilization<-function(envs, name, agg=mean){
   tmp <-
     get_mon_resources(envs) %>%
-    group_by_("resource", "replication") %>%
-    arrange_("resource", "time", "replication") %>%
-    mutate_("server_prev"  = lag("server", default = 0),
+    dplyr::group_by_("resource", "replication") %>%
+    dplyr::arrange_("resource", "time", "replication") %>%
+    dplyr::mutate_("server_prev"  = lag("server", default = 0),
             "next_time" = lead("time"),
             "step_time" = "next_time" - "time",
             "usage_time_weighted" = "step_time" * "server",
             "non_usage_time_weighted" = ifelse("server" == 0, "step_time", 0)) %>%
-    summarise_(utilization = sum("usage_time_weighted", na.rm=T) / sum("non_usage_time_weighted", "usage_time_weighted", na.rm=T)) %>%
-    group_by_("resource") %>%
-    summarise_(utilization = agg("utilization")) %>%
-    filter(resource==name)
+    dplyr::summarise_(utilization = sum("usage_time_weighted", na.rm=T) / sum("non_usage_time_weighted", "usage_time_weighted", na.rm=T)) %>%
+    dplyr::group_by_("resource") %>%
+    dplyr::summarise_(utilization = agg("utilization")) %>%
+    dplyr::filter_("resource"==name)
 
   tmp$utilization
 }

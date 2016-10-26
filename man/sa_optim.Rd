@@ -2,24 +2,27 @@
 % Please edit documentation in R/sa_optim.R
 \name{sa_optim}
 \alias{sa_optim}
-\title{A simmer differential evoltion optimizer}
+\title{A simmer simulated annealing optimizer}
 \usage{
 sa_optim(model, direction = c("min", "max"), objective, constraints, params,
   control, big_m = 1e+06)
 }
 \arguments{
-\item{objective}{the type of objective to focus on, for now only \code{minimize} and \code{maximize}}
+\item{model}{the simmer model encapsulated in a function}
 
-\item{control}{a list object of specifying the \code{control} parameters of \code{GenSA}, checkout \code{?GenSA::GenSA}}
+\item{direction}{optimization direction (\code{max} or \code{min})}
 
-\item{sim_expr}{a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}}
+\item{objective}{the objective function}
 
-\item{...}{the named arguments and per argument an vector of length two defining the lower and upper bound of the search space, e.g. \code{var1=c(1,5), var2=c(3,5)}}
-}
-\value{
-the optimal combination of the variable possibilities supplied in \code{...}
+\item{constraints}{a list of constraint functions}
+
+\item{params}{a list of parameters to optimize over}
+
+\item{control}{a control list created by a call to \code{optim_control()}}
+
+\item{big_m}{a penalty value for solutions with non-satisfied constraints}
 }
 \description{
-Implements the functionality of the \code{DEoptim} package.
+Implements the functionality of the \code{GenSA} package.
 }
 

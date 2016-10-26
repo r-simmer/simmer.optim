@@ -1,12 +1,14 @@
 #' A simmer grid optimizer
 #'
-#' @param model a function which runs a simmer model
-#' @param direction optmization direction to focus on, for now only \code{min} and \code{max}
-#' @param objective the objective measure
-#' @param constraints a list of constraint functions
-#' @param ... the named arguments and related vectors to optimize over, e.g. \code{var1=1:5, var2=3:5}
+#' Executes an exhaustive search over the solution space
 #'
-#' @return the optimal combination of the variable possibilities supplied in \code{...}
+#' @param model the simmer model encapsulated in a function
+#' @param direction optimization direction (\code{max} or \code{min})
+#' @param objective the objective function
+#' @param constraints a list of constraint functions
+#' @param params a list of parameters to optimize over
+#' @param control a control list created by a call to \code{optim_control()}
+#'
 #' @export
 grid_optim <- function(model, direction = c("min", "max"), objective, constraints, params, control) {
   direction <- match.arg(direction)

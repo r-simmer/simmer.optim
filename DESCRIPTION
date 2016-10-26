@@ -8,14 +8,14 @@ Description: A set of optimization functions for variable optimization in simmer
 License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 5.0.1
-Imports:
-    dplyr,
-    simmer
+Depends:
+    simmer (>= 3.2.0),
+    magrittr,
+    dplyr
 Suggests:
     knitr,
     rmarkdown,
     testthat,
-    simmer (>= 3.2.0),
     RcppDE,
     GenSA
 VignetteBuilder: knitr

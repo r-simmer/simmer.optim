@@ -21,9 +21,8 @@ optim_results <-
 #'
 #' Internal usage
 #'
-#' @param ... the options passed
+#' @param params a named list of params
 #' @export
-#' @return a function which supplies the variables to test
 opt_func <- function(params) {
   function(name) params[[name]]
 }
@@ -69,3 +68,8 @@ run_optimized <- function(optim_obj) {
   sim_expr <- optim_obj$sim_expr
   do.call(run_instance, c(params, list(sim_expr = sim_expr)))$envs
 }
+
+
+#' @importFrom magrittr %>%
+#' @export
+magrittr::`%>%`

@@ -1,3 +1,14 @@
+#' Main entry point for the simmer optimization framework
+#'
+#' @param model the simmer model encapsulated in a function
+#' @param method the method to be used (e.g. \code{grid_optim})
+#' @param direction optimization direction (\code{max} or \code{min})
+#' @param objective the objective function
+#' @param constraints a list of constraint functions
+#' @param params a list of parameters to optimize over
+#' @param control a control list created by a call to \code{optim_control()}
+#' @param ... extra parameters that are passed on to the optimization procedure
+#'
 #' @export
 simmer_optim <- function(model,
                          method,

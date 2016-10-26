@@ -1,13 +1,15 @@
-#' A simmer differential evoltion optimizer
+#' A simmer simulated annealing optimizer
 #'
-#' Implements the functionality of the \code{DEoptim} package.
+#' Implements the functionality of the \code{GenSA} package.
 #'
-#' @param sim_expr a function which runs a simmer env and returns a list with at least the keys \code{objective} and \code{constraints}
-#' @param objective the type of objective to focus on, for now only \code{minimize} and \code{maximize}
-#' @param control a list object of specifying the \code{control} parameters of \code{GenSA}, checkout \code{?GenSA::GenSA}
-#' @param ... the named arguments and per argument an vector of length two defining the lower and upper bound of the search space, e.g. \code{var1=c(1,5), var2=c(3,5)}
+#' @param model the simmer model encapsulated in a function
+#' @param direction optimization direction (\code{max} or \code{min})
+#' @param objective the objective function
+#' @param constraints a list of constraint functions
+#' @param params a list of parameters to optimize over
+#' @param control a control list created by a call to \code{optim_control()}
+#' @param big_m a penalty value for solutions with non-satisfied constraints
 #'
-#' @return the optimal combination of the variable possibilities supplied in \code{...}
 #' @export
 sa_optim <- function(model,
                      direction = c("min", "max"),

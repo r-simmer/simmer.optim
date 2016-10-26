@@ -8,20 +8,19 @@ grid_optim(model, direction = c("min", "max"), objective, constraints, params,
   control)
 }
 \arguments{
-\item{model}{a function which runs a simmer model}
+\item{model}{the simmer model encapsulated in a function}
 
-\item{direction}{optmization direction to focus on, for now only \code{min} and \code{max}}
+\item{direction}{optimization direction (\code{max} or \code{min})}
 
-\item{objective}{the objective measure}
+\item{objective}{the objective function}
 
 \item{constraints}{a list of constraint functions}
 
-\item{...}{the named arguments and related vectors to optimize over, e.g. \code{var1=1:5, var2=3:5}}
-}
-\value{
-the optimal combination of the variable possibilities supplied in \code{...}
+\item{params}{a list of parameters to optimize over}
+
+\item{control}{a control list created by a call to \code{optim_control()}}
 }
 \description{
-A simmer grid optimizer
+Executes an exhaustive search over the solution space
 }
 

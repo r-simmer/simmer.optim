@@ -3,6 +3,7 @@
 #' @param run_args the run arguments, a list with the following arguments: \code{until}
 #' @param replications the number of replications
 #' @param parallel whether or not replications should be run in parallel (leveraging \code{mclapply})
+#' @param verbose boolean determining verbosity
 #' @param ... extra named arguments added to the control object
 #'
 #' @export

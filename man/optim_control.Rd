@@ -14,6 +14,8 @@ optim_control(run_args = list(until = 1000), replications = 1,
 
 \item{parallel}{whether or not replications should be run in parallel (leveraging \code{mclapply})}
 
+\item{verbose}{boolean determining verbosity}
+
 \item{...}{extra named arguments added to the control object}
 }
 \description{
