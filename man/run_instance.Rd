@@ -9,9 +9,9 @@ run_instance(model, control, params)
 \arguments{
 \item{model}{the simmer model}
 
-\item{rep}{the number of replications}
+\item{control}{the \code{optim_control} object}
 
-\item{...}{named parameters to be passed to the simmer expression and accessbile through the \code{.opt} variable}
+\item{params}{a list of named parameters to be passed to the simmer expression and accessbile for the model through the \code{.opt} variable}
 }
 \description{
 Run n simmer models

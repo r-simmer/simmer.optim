@@ -9,13 +9,13 @@ License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 5.0.1
 Imports:
-    R6
+    dplyr,
+    simmer
 Suggests:
     knitr,
     rmarkdown,
     testthat,
     simmer (>= 3.2.0),
     RcppDE,
-    GenSA,
-    dplyr
+    GenSA
 VignetteBuilder: knitr
