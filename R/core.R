@@ -31,9 +31,10 @@ simmer_optim <- function(model,
 #' Run n simmer models
 #'
 #' @param model the simmer model
-#' @param rep the number of replications
-#' @param ... named parameters to be passed to the simmer expression and accessbile through the \code{.opt} variable
+#' @param control the \code{optim_control} object
+#' @param params a list of named parameters to be passed to the simmer expression and accessbile for the model through the \code{.opt} variable
 #'
+#' @import simmer
 #' @export
 run_instance <- function(model, control, params){
   rep <- control$replications
@@ -48,7 +49,7 @@ run_instance <- function(model, control, params){
         list(env = eval(body(model), envir = temp_env)),
         run_args))
       simmer::wrap(env)
-    })
+    }, mc.set.seed = F)
   } else {
     envs <- lapply(1:rep, function(i){
       do.call(simmer::run, c(
@@ -60,6 +61,11 @@ run_instance <- function(model, control, params){
 
 }
 
+#' Evaluator for the objective function
+#'
+#' @param envs a list of \code{envs} as produced by \code{run_instance}
+#' @param objective an objective function
+#'
 #' @export
 objective_evaluator<-function(envs, objective){
   if(is(objective, "funcArgs")){
@@ -70,6 +76,10 @@ objective_evaluator<-function(envs, objective){
 
 }
 
+#' Evaluator for the constraint functions
+#' @param envs a list of \code{envs} as produced by \code{run_instance}
+#' @param constraints a list of constraint functions
+#'
 #' @export
 constraints_evaluator<-function(envs, constraints){
 
@@ -85,6 +95,11 @@ constraints_evaluator<-function(envs, constraints){
   })
 }
 
+#' Helper function to run objective / constraint functions with specified arguments
+#'
+#' @param f the objective / constraint function
+#' @param ... a list of named arguments which will be used in the call to \code{f}
+#'
 #' @export
 with_args<-function(f, ...){
   x <- list(f = f,
@@ -94,8 +109,17 @@ with_args<-function(f, ...){
 }
 
 
+#' A helper function to return the results of an optimization method to the optimization framework
+#'
+#' @param method the name of the optimization function (string)
+#' @param objective_value the value of the objective
+#' @param constraints_satisfied boolean indicating whether or not all constraints where satisfied
+#' @param params the found parameters
+#' @param envs a copy of the generated envs (optional)
+#' @param extra_info a list of extra information (optional)
+#'
 #' @export
-method_results<-function(method, objective_value, constraints_satisfied, params, control, envs, extra_info = list()){
+method_results<-function(method, objective_value, constraints_satisfied, params, envs = NULL, extra_info = list()){
   r <- list(method = method,
             objective_value = objective_value,
             constraints_satisfied = constraints_satisfied,

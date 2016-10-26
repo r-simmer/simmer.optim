@@ -7,7 +7,6 @@
 #' @param ... the named arguments and related vectors to optimize over, e.g. \code{var1=1:5, var2=3:5}
 #'
 #' @return the optimal combination of the variable possibilities supplied in \code{...}
-#' @import R6
 #' @export
 grid_optim <- function(model, direction = c("min", "max"), objective, constraints, params, control) {
   direction <- match.arg(direction)

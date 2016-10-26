@@ -11,7 +11,6 @@
 #' @param ... the named arguments and per argument an vector of length two defining the lower and upper bound of the search space, e.g. \code{var1=c(1,5), var2=c(3,5)}
 #'
 #' @return the optimal combination of the variable possibilities supplied in \code{...}
-#' @import R6
 #' @export
 de_optim <- function(model,
                      direction = c("min", "max"),
