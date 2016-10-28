@@ -17,8 +17,8 @@ knitr::opts_chunk$set(warning=F,
 
 ```{r, eval=FALSE, include=FALSE}
 # to generate output file, for some reason the readme func of html vignette gives an error
-# rmarkdown::render("vignettes/basic_functionality.Rmd", 
-#                   output_format = "md_document", 
+# rmarkdown::render("vignettes/basic_functionality.Rmd",
+#                   output_format = "md_document",
 #                   output_dir = ".",
 #                   output_file = "README.md")
 ```

@@ -16,7 +16,7 @@ grid_optim <- function(model, direction = c("min", "max"), objective, constraint
 
   if(control$verbose){
     cat("Running grid optimization procedure", "\n")
-    pb <- txtProgressBar(style=3)
+    pb <- utils::txtProgressBar(style=3)
   }
 
 
@@ -37,7 +37,7 @@ grid_optim <- function(model, direction = c("min", "max"), objective, constraint
         index = i
       )
 
-      if(control$verbose) setTxtProgressBar(pb, i/NROW(search_grid))
+      if(control$verbose) utils::setTxtProgressBar(pb, i/NROW(search_grid))
       res
     })
 

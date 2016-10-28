@@ -36,7 +36,7 @@ de_optim <- function(model,
   lower_bounds <- sapply(params, function(x) x[1])
   upper_bounds <- sapply(params, function(x) x[length(x)])
   param_types <- sapply(params, function(x){
-    if(is(x, "ParDiscrete")){
+    if(methods::is(x, "ParDiscrete")){
       "ParDiscrete"
     } else {
       "ParContinuous"

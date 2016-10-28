@@ -22,7 +22,7 @@ simmer_optim <- function(model,
   if (length(params) == 0)
     stop("Please supply parameters to optimize over.")
 
-  control <- modifyList(optim_control(), control)
+  control <- utils::modifyList(optim_control(), control)
 
   r<-method(model = model,
             direction = direction,
@@ -32,7 +32,7 @@ simmer_optim <- function(model,
             control = control,
             ...)
 
-  if(!is(r, "MethodResults"))
+  if(!methods::is(r, "MethodResults"))
     stop("Optimization method should return a MethodResults object (created by 'method_results')")
 
   r
@@ -55,9 +55,9 @@ run_instance <- function(model, control, params){
 
   if(control$parallel){
     envs <- parallel::mclapply(1:rep, function(i){
-      env <- do.call(simmer::run, c(
-        list(env = eval(body(model), envir = temp_env)),
-        run_args))
+      env <- do.call(simmer::run,
+                     c(list(.env = eval(body(model), envir = temp_env)),
+                       run_args))
       simmer::wrap(env)
     }, mc.set.seed = F)
   } else {
@@ -78,7 +78,7 @@ run_instance <- function(model, control, params){
 #'
 #' @export
 objective_evaluator<-function(envs, objective){
-  if(is(objective, "funcArgs")){
+  if(methods::is(objective, "funcArgs")){
     do.call(objective$f, c(list(envs=envs), objective$args))
   } else {
     do.call(objective, list(envs=envs))
@@ -96,7 +96,7 @@ constraints_evaluator<-function(envs, constraints){
     stop("Please supply a list of constraint evaluation functions")
 
   lapply(1:length(constraints), function(i){
-    if(is(constraints[[i]], "funcArgs")){
+    if(methods::is(constraints[[i]], "funcArgs")){
       do.call(constraints[[i]]$f, c(list(envs = envs), constraints[[i]]$args))
     } else {
       do.call(constraints[[i]], list(envs=envs))
