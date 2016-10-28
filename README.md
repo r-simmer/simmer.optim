@@ -70,7 +70,7 @@ Moreover it lasts a good bit more than 4 hours.
 
     plot_evolution_arrival_times(envs, "waiting_time")
 
-![](/Users/bart/src/simmer.optim/README_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-3-1.png)
 
 The number of patients served in this process is:
 
@@ -90,7 +90,7 @@ consultation (after 4 hours) is:
       summarise(n=n()) %>%
       .$n %>% mean
 
-    ## [1] 10.84
+    ## [1] 11.04
 
 And the average waiting time of the patients served before the planned
 end of the consultation:
@@ -100,7 +100,7 @@ end of the consultation:
       mutate(waiting_time = end_time - start_time ) %>%
       .$waiting_time %>% mean
 
-    ## [1] 56.95572
+    ## [1] 54.44837
 
 ### Optimizing the situation
 
