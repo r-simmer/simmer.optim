@@ -45,7 +45,6 @@ simmer_optim <- function(model,
 #' @param control the \code{optim_control} object
 #' @param params a list of named parameters to be passed to the simmer expression and accessbile for the model through the \code{.opt} variable
 #'
-#' @import simmer
 #' @export
 run_instance <- function(model, control, params){
   rep <- control$replications
@@ -63,13 +62,13 @@ run_instance <- function(model, control, params){
     }, mc.set.seed = F)
   } else {
     envs <- lapply(1:rep, function(i){
-      do.call(simmer::run, c(
-        list(env = eval(body(model), envir = temp_env)),
-        run_args))
+      do.call(simmer::run,
+              c(list(.env = eval(body(model), envir = temp_env)),
+                run_args))
     })
   }
-  envs
 
+  envs
 }
 
 #' Evaluator for the objective function
@@ -84,7 +83,6 @@ objective_evaluator<-function(envs, objective){
   } else {
     do.call(objective, list(envs=envs))
   }
-
 }
 
 #' Evaluator for the constraint functions

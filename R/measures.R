@@ -5,9 +5,9 @@
 #'
 #' @export
 msr_arrivals_finished<-function(envs, agg = mean){
-  tmp <- get_mon_arrivals(envs) %>%
+  tmp <- simmer::get_mon_arrivals(envs) %>%
     dplyr::group_by_("replication") %>%
-    dplyr::summarise(finished = n()) %>%
+    dplyr::summarise(finished = n())
 
   tmp$finished %>%
     agg
@@ -49,11 +49,11 @@ msr_resource_capacity<-function(envs, name, agg = mean){
 #' @export
 msr_resource_utilization<-function(envs, name, agg=mean){
   tmp <-
-    get_mon_resources(envs) %>%
+    simmer::get_mon_resources(envs) %>%
     dplyr::group_by_("resource", "replication") %>%
     dplyr::arrange_("resource", "time", "replication") %>%
     dplyr::mutate_("server_prev"  = lag("server", default = 0),
-            "next_time" = lead("time"),
+            "next_time" = dplyr::lead("time"),
             "step_time" = "next_time" - "time",
             "usage_time_weighted" = "step_time" * "server",
             "non_usage_time_weighted" = ifelse("server" == 0, "step_time", 0)) %>%

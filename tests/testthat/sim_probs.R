@@ -24,8 +24,8 @@ sim_prob_1_constraint<-
     cost_cardiologist <- 100
 
     total_cost <-
-      msr_runtime(envs)/60 * msr_resource_amount(envs, "nurse") * cost_nurse +
-      msr_runtime(envs)/60 * msr_resource_amount(envs, "cardiologist") * cost_cardiologist
+      msr_runtime(envs)/60 * msr_resource_capacity(envs, "nurse") * cost_nurse +
+      msr_runtime(envs)/60 * msr_resource_capacity(envs, "cardiologist") * cost_cardiologist
 
     total_cost < 2000
   }

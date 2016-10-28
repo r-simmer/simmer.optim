@@ -70,7 +70,7 @@ test_that("converges correctly with parallel runs", {
                       cardiologist = par_discrete(1:4)
                     ))
 
-  expect_true(r$objective_value >= 38 &&
+  expect_true(r$objective_value >= 30 &&
                 r$objective_value <= 50)
 })
 
