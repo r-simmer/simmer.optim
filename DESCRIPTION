@@ -12,6 +12,7 @@ Imports:
     simmer (>= 3.2.0),
     magrittr,
     dplyr,
+    tidyr,
     methods,
     utils
 Suggests:
