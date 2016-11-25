@@ -17,7 +17,7 @@ msr_arrivals_<-function(envs, agg){
 #' @export
 msr_arrivals_finished<-function(envs, agg = mean){
   tmp <- msr_arrivals_(envs, agg) %>%
-    filter_("finished == TRUE")
+    dplyr::filter_("finished == TRUE")
 
   tmp$agg
 }
@@ -30,7 +30,7 @@ msr_arrivals_finished<-function(envs, agg = mean){
 #' @export
 msr_arrivals_rejected<-function(envs, agg = mean){
   tmp <- msr_arrivals_(envs, agg) %>%
-    filter_("finished == FALSE")
+    dplyr::filter_("finished == FALSE")
 
   tmp$agg
 }
