@@ -6,7 +6,7 @@ msr_arrivals_<-function(envs, agg){
     tidyr::complete_(list("replication", "finished" = "c(TRUE, FALSE)"),
                      fill = list(n = 0)) %>%
     dplyr::group_by_("finished") %>%
-    dplyr::summarise_(.dots = setNames(list(~agg(n)), "agg"))
+    dplyr::summarise_(.dots = stats::setNames(list(~agg(n)), "agg"))
 }
 
 #' Measure the number of finished arrivals
