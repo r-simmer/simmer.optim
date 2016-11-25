@@ -1,9 +1,10 @@
 Package: simmer.optim
 Type: Package
-Title: Parameter Optimization Functions for simmer
+Title: Parameter Optimization Functions for 'simmer'
 Version: 0.1.0
-Authors@R: c(person("Bart", "Smeets", email="bartsmeets86@gmail.com", role=c("aut","cre")),
-            person("Inaki", "Ukar", role="aut"))
+Authors@R: c(
+    person("Bart", "Smeets", email="bartsmeets86@gmail.com", role=c("aut", "cph", "cre")),
+    person("Iñaki", "Ucar", email="i.ucar86@gmail.com", role=c("aut", "cph")))
 Description: A set of optimization functions for variable optimization in simmer simulations.
 License: MIT + file LICENSE
 LazyData: TRUE
