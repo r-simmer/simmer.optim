@@ -1,3 +1,14 @@
+msr_arrivals_<-function(envs, agg){
+  simmer::get_mon_arrivals(envs, ongoing = TRUE) %>%
+    dplyr::group_by_("replication", "finished") %>%
+    dplyr::count() %>%
+    dplyr::ungroup() %>%
+    tidyr::complete_(list("replication", "finished" = "c(TRUE, FALSE)"),
+                     fill = list(n = 0)) %>%
+    dplyr::group_by_("finished") %>%
+    dplyr::summarise_(.dots = stats::setNames(list(~agg(n)), "agg"))
+}
+
 #' Measure the number of finished arrivals
 #'
 #' @param envs a list of \code{envs} as produced by \code{run_instance}
@@ -5,12 +16,23 @@
 #'
 #' @export
 msr_arrivals_finished<-function(envs, agg = mean){
-  tmp <- simmer::get_mon_arrivals(envs) %>%
-    dplyr::group_by_("replication") %>%
-    dplyr::summarise_(finished = "n()")
+  tmp <- msr_arrivals_(envs, agg) %>%
+    dplyr::filter_("finished == TRUE")
 
-  tmp$finished %>%
-    agg
+  tmp$agg
+}
+
+#' Measure the number of rejected arrivals
+#'
+#' @param envs a list of \code{envs} as produced by \code{run_instance}
+#' @param agg the method of aggregation of per replication results
+#'
+#' @export
+msr_arrivals_rejected<-function(envs, agg = mean){
+  tmp <- msr_arrivals_(envs, agg) %>%
+    dplyr::filter_("finished == FALSE")
+
+  tmp$agg
 }
 
 
