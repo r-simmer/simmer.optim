@@ -27,5 +27,6 @@ Suggests:
     testthat,
     RcppDE,
     GenSA
+RoxygenNote: 5.0.1
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
