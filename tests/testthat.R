@@ -5,5 +5,3 @@ if (-1 < utils::compareVersion("3.5.1", as.character(utils::packageVersion("simm
   trajectory <- create_trajectory
 
 test_check("simmer.optim")
-
-detach("package:simmer", unload = TRUE)
