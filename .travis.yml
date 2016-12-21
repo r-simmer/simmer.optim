@@ -1,9 +1,16 @@
 language: r
 cache: packages
+r:
+  - oldrel
+  - release
+  - devel
 
 r_build_args: --no-build-vignettes --no-manual --no-resave-data
 r_check_args: --no-build-vignettes --no-manual
-warnings_are_errors: false
+warnings_are_errors: true
+env:
+  global:
+    - _R_CHECK_CRAN_INCOMING_=FALSE
 
 r_github_packages:
   - jimhester/covr
