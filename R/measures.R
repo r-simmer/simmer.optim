@@ -1,5 +1,5 @@
 msr_arrivals_<-function(envs, agg){
-  simmer::get_mon_arrivals(envs, ongoing = TRUE) %>%
+  simmer::get_mon_arrivals(envs) %>%
     dplyr::group_by_("replication", "finished") %>%
     dplyr::count() %>%
     dplyr::ungroup() %>%
