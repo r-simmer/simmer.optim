@@ -4,6 +4,7 @@ context("sa_optim optimization")
 
 
 test_that("no errors are returned", {
+  skip_if_not_installed("GenSA")
   expect_error({
     r <- simmer_optim(model = sim_prob_1,
                       method = sa_optim,
@@ -20,6 +21,7 @@ test_that("no errors are returned", {
 
 
 test_that("no errors are with multiple envs", {
+  skip_if_not_installed("GenSA")
   expect_error({
     r <- simmer_optim(model = sim_prob_1,
                       method = sa_optim,
@@ -37,6 +39,7 @@ test_that("no errors are with multiple envs", {
 
 
 test_that("converges correctly", {
+  skip_if_not_installed("GenSA")
   r <- simmer_optim(model= sim_prob_1,
                     method = sa_optim,
                     direction = "max",
@@ -56,6 +59,7 @@ test_that("converges correctly", {
 
 
 test_that("converges correctly with parallel runs", {
+  skip_if_not_installed("GenSA")
   r <- simmer_optim(model= sim_prob_1,
                     method = sa_optim,
                     direction = "max",
@@ -75,6 +79,7 @@ test_that("converges correctly with parallel runs", {
 })
 
 test_that("constraints never met returns a 'constraints satisfied==FALSE'", {
+  skip_if_not_installed("GenSA")
   r<-simmer_optim(model=sim_prob_1,
                   method = sa_optim,
                   direction = "max",
