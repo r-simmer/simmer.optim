@@ -4,15 +4,15 @@ Title: Parameter Optimization Functions for 'simmer'
 Version: 0.1.0
 Authors@R: c(
     person("Bart", "Smeets", email="bartsmeets86@gmail.com", role=c("aut", "cph", "cre")),
-    person("Iñaki", "Ucar", email="i.ucar86@gmail.com", role=c("aut", "cph")))
+    person("Iñaki", "Ucar", email="i.ucar86@gmail.com", 
+      role=c("aut", "cph"), comment=c(ORCID="0000-0001-6403-5550")))
 Description: A set of optimization functions for variable optimization in simmer simulations.
 License: MIT + file LICENSE
-LazyData: TRUE
-RoxygenNote: 5.0.1
+Encoding: UTF-8
 Depends:
     R (>= 3.1.2)
 Imports:
-    simmer (>= 3.2.0),
+    simmer (>= 3.6.0),
     magrittr,
     dplyr,
     tidyr,
@@ -20,9 +20,11 @@ Imports:
     stats,
     utils
 Suggests:
+    simmer.plot (>= 0.1.12),
     knitr,
     rmarkdown,
     testthat,
     RcppDE,
     GenSA
 VignetteBuilder: knitr
+RoxygenNote: 6.0.1

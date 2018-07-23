@@ -28,4 +28,3 @@ simmer_optim(model, method, direction = "max",
 \description{
 Main entry point for the simmer optimization framework
 }
-

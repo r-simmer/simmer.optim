@@ -25,4 +25,3 @@ sa_optim(model, direction = c("min", "max"), objective, constraints, params,
 \description{
 Implements the functionality of the \code{GenSA} package.
 }
-

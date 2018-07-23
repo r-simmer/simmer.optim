@@ -14,4 +14,3 @@ assert_avg_waiting_time_max(envs, max_val)
 \description{
 Assert that average waiting time < max_val
 }
-

@@ -14,4 +14,3 @@ assert_waiting_time_max(envs, max_val)
 \description{
 Assert that waiting time < max_val
 }
-

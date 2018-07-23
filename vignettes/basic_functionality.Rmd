@@ -55,7 +55,7 @@ See the basic `simmer` example below.
 library(simmer)
 library(dplyr)
 
-t0<-create_trajectory() %>%
+t0<-trajectory() %>%
   seize("nurse") %>%
   timeout(function() rpois(1, 10)) %>%
   release("nurse") %>%
@@ -76,8 +76,10 @@ In this example, a patient first sees a nurse, followed by a visit to the cadiol
 
 In the plot below, we can see that the process isn't very stable. Moreover it lasts a good bit more than 4 hours.
 
-```{r}
-plot_evolution_arrival_times(envs, "waiting_time")
+```{r, eval=requireNamespace("simmer.plot", quietly=TRUE)}
+library(simmer.plot)
+
+plot(get_mon_arrivals(envs), "waiting_time")
 ```
 
 The number of patients served in this process is:
@@ -145,7 +147,7 @@ We start by taking the same definition of the simulation model, but wrapping it 
 library(simmer.optim)
 
 sim_model<-function(){
-  t0<-create_trajectory() %>%
+  t0<-trajectory() %>%
     seize("nurse") %>%
     timeout(function() rpois(1, 10)) %>%
     release("nurse") %>%

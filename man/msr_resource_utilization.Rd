@@ -16,4 +16,3 @@ msr_resource_utilization(envs, name, agg = mean)
 \description{
 Measure the utilization of a resource type
 }
-

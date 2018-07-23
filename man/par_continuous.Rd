@@ -12,4 +12,3 @@ par_continuous(vec)
 \description{
 A parameter vector of type continuous
 }
-

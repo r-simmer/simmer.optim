@@ -14,4 +14,3 @@ msr_arrivals_rejected(envs, agg = mean)
 \description{
 Measure the number of rejected arrivals
 }
-

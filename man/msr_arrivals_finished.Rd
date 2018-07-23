@@ -14,4 +14,3 @@ msr_arrivals_finished(envs, agg = mean)
 \description{
 Measure the number of finished arrivals
 }
-

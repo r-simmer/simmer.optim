@@ -16,4 +16,3 @@ run_instance(model, control, params)
 \description{
 Run n simmer models
 }
-

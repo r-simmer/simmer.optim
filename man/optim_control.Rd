@@ -21,4 +21,3 @@ optim_control(run_args = list(until = 1000), replications = 1,
 \description{
 Control object to configure the optimization procedure
 }
-

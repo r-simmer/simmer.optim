@@ -16,4 +16,3 @@ optim_results(objective, constraints = list(), envs = NULL)
 \description{
 Function to pass results of simmer evaluation back to the optimization framework
 }
-

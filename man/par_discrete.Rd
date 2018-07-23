@@ -12,4 +12,3 @@ par_discrete(vec)
 \description{
 A parameter vector of type discrete
 }
-

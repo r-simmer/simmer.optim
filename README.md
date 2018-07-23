@@ -45,7 +45,7 @@ See the basic `simmer` example below.
     library(simmer)
     library(dplyr)
 
-    t0<-create_trajectory() %>%
+    t0<-trajectory() %>%
       seize("nurse") %>%
       timeout(function() rpois(1, 10)) %>%
       release("nurse") %>%
@@ -68,7 +68,9 @@ minutes).
 In the plot below, we can see that the process isn't very stable.
 Moreover it lasts a good bit more than 4 hours.
 
-    plot_evolution_arrival_times(envs, "waiting_time")
+    library(simmer.plot)
+
+    plot(get_mon_arrivals(envs), "waiting_time")
 
 ![](README_files/figure-markdown_strict/unnamed-chunk-3-1.png)
 
@@ -149,7 +151,7 @@ as the optimization framework willt take care of this for us.
     library(simmer.optim)
 
     sim_model<-function(){
-      t0<-create_trajectory() %>%
+      t0<-trajectory() %>%
         seize("nurse") %>%
         timeout(function() rpois(1, 10)) %>%
         release("nurse") %>%

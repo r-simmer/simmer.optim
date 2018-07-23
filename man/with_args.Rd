@@ -14,4 +14,3 @@ with_args(f, ...)
 \description{
 Helper function to run objective / constraint functions with specified arguments
 }
-

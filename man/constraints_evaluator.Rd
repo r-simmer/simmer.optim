@@ -14,4 +14,3 @@ constraints_evaluator(envs, constraints)
 \description{
 Evaluator for the constraint functions
 }
-

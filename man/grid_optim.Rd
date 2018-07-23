@@ -23,4 +23,3 @@ grid_optim(model, direction = c("min", "max"), objective, constraints, params,
 \description{
 Executes an exhaustive search over the solution space
 }
-

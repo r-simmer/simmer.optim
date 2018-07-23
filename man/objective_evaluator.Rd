@@ -14,4 +14,3 @@ objective_evaluator(envs, objective)
 \description{
 Evaluator for the objective function
 }
-

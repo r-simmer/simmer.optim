@@ -15,4 +15,3 @@ For this to work an \code{envs} object has to be returned with the \code{optim_r
 \seealso{
 results
 }
-

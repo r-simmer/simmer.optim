@@ -14,4 +14,3 @@ msr_runtime(envs, agg = mean)
 \description{
 Measure the runtime of the model
 }
-

@@ -16,4 +16,3 @@ msr_resource_capacity(envs, name, agg = mean)
 \description{
 Measure the capacity of a resource type
 }
-

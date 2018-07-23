@@ -12,4 +12,3 @@ results(optim_obj)
 \description{
 Show the results of an optimization procedure
 }
-

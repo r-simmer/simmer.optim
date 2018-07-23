@@ -1,7 +1,7 @@
 library(simmer)
 
 sim_prob_1 <- function() {
-  t0 <- create_trajectory() %>%
+  t0 <- trajectory() %>%
     seize("nurse") %>%
     timeout(function()
       rpois(1, 10)) %>%
@@ -31,7 +31,7 @@ sim_prob_1_constraint<-
   }
 
 sim_prob_2 <- function() {
-  t0 <- create_trajectory() %>%
+  t0 <- trajectory() %>%
     seize("nurse") %>%
     timeout(function()
       rpois(1, 10)) %>%
@@ -71,7 +71,7 @@ sim_prob_2 <- function() {
 
 
 sim_prob_3 <- function() {
-  t0 <- create_trajectory() %>%
+  t0 <- trajectory() %>%
     seize("nurse") %>%
     timeout(function()
       rpois(1, 10)) %>%
@@ -84,12 +84,12 @@ sim_prob_3 <- function() {
       function()
         sample(c(1, 2), 1),
       merge = c(T, T),
-      create_trajectory() %>%
+      trajectory() %>%
         seize("physiotherapist") %>%
         timeout(function()
           rpois(1, 45)) %>%
         release("physiotherapist"),
-      create_trajectory() %>%
+      trajectory() %>%
         timeout(0)
     )
 

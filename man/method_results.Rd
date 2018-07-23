@@ -23,4 +23,3 @@ method_results(method, objective_value, constraints_satisfied, params,
 \description{
 A helper function to return the results of an optimization method to the optimization framework
 }
-

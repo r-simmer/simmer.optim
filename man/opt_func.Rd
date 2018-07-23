@@ -12,4 +12,3 @@ opt_func(params)
 \description{
 Internal usage
 }
-
