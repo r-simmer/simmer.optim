@@ -46,7 +46,7 @@ test_that("converges correctly", {
                     objective = msr_arrivals_finished,
                     constraints = list(sim_prob_1_constraint),
                     control = optim_control(run_args = list(until = 8 * 60),
-                                            rep = 2,
+                                            rep = 4,
                                             sa_optim = list(max.call = 200)),
                     params = list(
                       nurse = par_discrete(1:4),
@@ -66,7 +66,7 @@ test_that("converges correctly with parallel runs", {
                     objective = msr_arrivals_finished,
                     constraints = list(sim_prob_1_constraint),
                     control = optim_control(run_args = list(until = 8 * 60),
-                                            rep = 2,
+                                            rep = 4,
                                             sa_optim = list(max.call = 200),
                                             parallel = TRUE),
                     params = list(
