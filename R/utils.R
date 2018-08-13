@@ -70,6 +70,6 @@ run_optimized <- function(optim_obj) {
 }
 
 
-#' @importFrom magrittr %>%
+#' @importFrom simmer %>%
 #' @export
-magrittr::`%>%`
+simmer::`%>%`
