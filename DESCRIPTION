@@ -4,7 +4,7 @@ Title: Parameter Optimization Functions for 'simmer'
 Version: 0.1.0
 Authors@R: c(
     person("Bart", "Smeets", email="bartsmeets86@gmail.com", role=c("aut", "cph", "cre")),
-    person("Iñaki", "Ucar", email="i.ucar86@gmail.com", 
+    person("Iñaki", "Ucar", email="iucar@fedoraproject.org",
       role=c("aut", "cph"), comment=c(ORCID="0000-0001-6403-5550")))
 Description: A set of optimization functions for variable optimization in simmer simulations.
 License: MIT + file LICENSE
