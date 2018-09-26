@@ -51,7 +51,7 @@ grid_optim <- function(model, direction = c("min", "max"), objective, constraint
     Filter(function(x)
       all(unlist(x$constraints_satisfied)), intermediary_results)
 
-  # stop if no instance available that satisfies constriants
+  # stop if no instance available that satisfies constraints
   if (length(results_filtered) == 0)
     stop("No instance(s) available where constraints are satisfied.")
 
