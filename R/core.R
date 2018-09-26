@@ -43,7 +43,7 @@ simmer_optim <- function(model,
 #'
 #' @param model the simmer model
 #' @param control the \code{optim_control} object
-#' @param params a list of named parameters to be passed to the simmer expression and accessbile for the model through the \code{.opt} variable
+#' @param params a list of named parameters to be passed to the simmer expression and accessible for the model through the \code{.opt} variable
 #'
 #' @export
 run_instance <- function(model, control, params){
@@ -122,7 +122,7 @@ with_args<-function(f, ...){
 #'
 #' @param method the name of the optimization function (string)
 #' @param objective_value the value of the objective
-#' @param constraints_satisfied boolean indicating whether or not all constraints where satisfied
+#' @param constraints_satisfied boolean indicating whether or not all constraints were satisfied
 #' @param params the found parameters
 #' @param envs a copy of the generated envs (optional)
 #' @param extra_info a list of extra information (optional)

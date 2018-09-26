@@ -12,7 +12,7 @@ method_results(method, objective_value, constraints_satisfied, params,
 
 \item{objective_value}{the value of the objective}
 
-\item{constraints_satisfied}{boolean indicating whether or not all constraints where satisfied}
+\item{constraints_satisfied}{boolean indicating whether or not all constraints were satisfied}
 
 \item{params}{the found parameters}
 

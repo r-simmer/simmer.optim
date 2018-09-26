@@ -1,4 +1,4 @@
-#' A simmer differential evoltion optimizer
+#' A simmer differential evolution optimizer
 #'
 #' Implements the functionality of the \code{DEoptim} package.
 #'
