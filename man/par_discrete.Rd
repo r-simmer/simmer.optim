@@ -7,7 +7,7 @@
 par_discrete(vec)
 }
 \arguments{
-\item{vec}{the orginal vector}
+\item{vec}{the original vector}
 }
 \description{
 A parameter vector of type discrete

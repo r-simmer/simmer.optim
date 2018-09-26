@@ -2,7 +2,7 @@
 % Please edit documentation in R/de_optim.R
 \name{de_optim}
 \alias{de_optim}
-\title{A simmer differential evoltion optimizer}
+\title{A simmer differential evolution optimizer}
 \usage{
 de_optim(model, direction = c("min", "max"), objective, constraints,
   params, control, big_m = 1e+06)

@@ -11,7 +11,7 @@ run_instance(model, control, params)
 
 \item{control}{the \code{optim_control} object}
 
-\item{params}{a list of named parameters to be passed to the simmer expression and accessbile for the model through the \code{.opt} variable}
+\item{params}{a list of named parameters to be passed to the simmer expression and accessible for the model through the \code{.opt} variable}
 }
 \description{
 Run n simmer models
