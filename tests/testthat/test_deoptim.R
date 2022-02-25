@@ -1,7 +1,4 @@
-source("sim_probs.R")
-context("de_optim optimization")
-
-
+set.seed(42)
 
 test_that("no errors are returned", {
   skip_if_not_installed("RcppDE")

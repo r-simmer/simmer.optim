@@ -1,7 +1,4 @@
-source("sim_probs.R")
-context("grid optimization")
-
-
+set.seed(42)
 
 test_that("no errors are returned", {
   expect_error({
