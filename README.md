@@ -275,7 +275,7 @@ run each parameter configuration 20 times.
 As we can see, the results are different from our earlier findings.
 While the single run finds quite a good objective valuen, we see that
 when we run 20 replications of the model, the earlier found solutions
-was probably a very 'optimisitic' run, which will be achieved on most
+was probably a very 'optimisitic' run, which will not be achieved on most
 days.
 
 Replications can become quite time consuming when run sequentially. We
