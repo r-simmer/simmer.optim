@@ -4,8 +4,13 @@
 \alias{optim_control}
 \title{Control object to configure the optimization procedure}
 \usage{
-optim_control(run_args = list(until = 1000), replications = 1,
-  parallel = FALSE, verbose = FALSE, ...)
+optim_control(
+  run_args = list(until = 1000),
+  replications = 1,
+  parallel = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{run_args}{the run arguments, a list with the following arguments: \code{until}}

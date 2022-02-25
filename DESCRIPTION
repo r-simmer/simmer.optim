@@ -1,7 +1,7 @@
 Package: simmer.optim
 Type: Package
 Title: Parameter Optimization Functions for 'simmer'
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Bart", "Smeets", email="bartsmeets86@gmail.com", role=c("aut", "cph", "cre")),
     person("Iñaki", "Ucar", email="iucar@fedoraproject.org",
@@ -9,10 +9,12 @@ Authors@R: c(
 Description: A set of optimization functions for variable optimization in simmer simulations.
 License: MIT + file LICENSE
 Encoding: UTF-8
+URL: http://r-simmer.org, https://github.com/r-simmer/simmer.optim
+BugReports: https://github.com/r-simmer/simmer.optim/issues
 Depends:
-    R (>= 3.1.2)
+    R (>= 3.1.2),
+    simmer (>= 3.6.0)
 Imports:
-    simmer (>= 3.6.0),
     dplyr,
     tidyr,
     methods,
@@ -26,4 +28,4 @@ Suggests:
     RcppDE,
     GenSA
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.2

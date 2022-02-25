@@ -4,9 +4,16 @@
 \alias{simmer_optim}
 \title{Main entry point for the simmer optimization framework}
 \usage{
-simmer_optim(model, method, direction = "max",
-  objective = msr_arrivals_finished, constraints, params = list(),
-  control = optim_control(), ...)
+simmer_optim(
+  model,
+  method,
+  direction = "max",
+  objective = msr_arrivals_finished,
+  constraints,
+  params = list(),
+  control = optim_control(),
+  ...
+)
 }
 \arguments{
 \item{model}{the simmer model encapsulated in a function}

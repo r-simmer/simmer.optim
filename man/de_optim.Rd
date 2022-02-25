@@ -4,8 +4,15 @@
 \alias{de_optim}
 \title{A simmer differential evolution optimizer}
 \usage{
-de_optim(model, direction = c("min", "max"), objective, constraints,
-  params, control, big_m = 1e+06)
+de_optim(
+  model,
+  direction = c("min", "max"),
+  objective,
+  constraints,
+  params,
+  control,
+  big_m = 1e+06
+)
 }
 \arguments{
 \item{model}{the simmer model encapsulated in a function}

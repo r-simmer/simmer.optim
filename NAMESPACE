@@ -2,7 +2,6 @@
 
 S3method(print,MethodResults)
 S3method(print,OptimResult)
-export("%>%")
 export(assert_avg_waiting_time_max)
 export(assert_waiting_time_max)
 export(constraints_evaluator)
@@ -26,4 +25,4 @@ export(run_optimized)
 export(sa_optim)
 export(simmer_optim)
 export(with_args)
-importFrom(simmer,"%>%")
+import(simmer)

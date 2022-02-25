@@ -4,8 +4,14 @@
 \alias{method_results}
 \title{A helper function to return the results of an optimization method to the optimization framework}
 \usage{
-method_results(method, objective_value, constraints_satisfied, params,
-  envs = NULL, extra_info = list())
+method_results(
+  method,
+  objective_value,
+  constraints_satisfied,
+  params,
+  envs = NULL,
+  extra_info = list()
+)
 }
 \arguments{
 \item{method}{the name of the optimization function (string)}

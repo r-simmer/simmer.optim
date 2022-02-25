@@ -55,14 +55,14 @@ run_instance <- function(model, control, params){
 
   if(control$parallel){
     envs <- parallel::mclapply(1:rep, function(i){
-      env <- do.call(simmer::run,
+      env <- do.call(run,
                      c(list(.env = eval(body(model), envir = temp_env)),
                        run_args))
-      simmer::wrap(env)
+      wrap(env)
     }, mc.set.seed = F)
   } else {
     envs <- lapply(1:rep, function(i){
-      do.call(simmer::run,
+      do.call(run,
               c(list(.env = eval(body(model), envir = temp_env)),
                 run_args))
     })

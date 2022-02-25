@@ -6,7 +6,7 @@
 #' @export
 assert_waiting_time_max<-function(envs, max_val){
   tmp <-
-    simmer::get_mon_arrivals(envs) %>%
+    get_mon_arrivals(envs) %>%
     dplyr::mutate_("waiting_time" = "end_time - (start_time + activity_time)")
 
   max(tmp$waiting_time) < max_val
@@ -22,7 +22,7 @@ assert_waiting_time_max<-function(envs, max_val){
 #' @export
 assert_avg_waiting_time_max<-function(envs, max_val){
   tmp <-
-    simmer::get_mon_arrivals(envs) %>%
+    get_mon_arrivals(envs) %>%
     dplyr::mutate_("waiting_time" = "end_time - (start_time + activity_time)") %>%
     dplyr::summarise_("waiting_time_avg" = "mean(waiting_time)")
 

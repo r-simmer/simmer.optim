@@ -1,5 +1,5 @@
 msr_arrivals_<-function(envs, agg){
-  simmer::get_mon_arrivals(envs) %>%
+  get_mon_arrivals(envs, ongoing = TRUE) %>%
     dplyr::group_by_("replication", "finished") %>%
     dplyr::count() %>%
     dplyr::ungroup() %>%
@@ -43,7 +43,7 @@ msr_arrivals_rejected<-function(envs, agg = mean){
 #'
 #' @export
 msr_runtime<-function(envs, agg = mean){
-  lapply(envs, simmer::now) %>%
+  lapply(envs, now) %>%
     unlist %>%
     agg
 }
@@ -57,7 +57,7 @@ msr_runtime<-function(envs, agg = mean){
 #'
 #' @export
 msr_resource_capacity<-function(envs, name, agg = mean){
-  lapply(envs, function(e) simmer::get_capacity(e, name)) %>%
+  lapply(envs, function(e) get_capacity(e, name)) %>%
     unlist %>%
     agg
 }
@@ -71,7 +71,7 @@ msr_resource_capacity<-function(envs, name, agg = mean){
 #' @export
 msr_resource_utilization<-function(envs, name, agg=mean){
   tmp <-
-    simmer::get_mon_resources(envs) %>%
+    get_mon_resources(envs) %>%
     dplyr::group_by_("resource", "replication") %>%
     dplyr::arrange_("resource", "time", "replication") %>%
     dplyr::mutate_("server_prev"  = "lag(server, default = 0)",
