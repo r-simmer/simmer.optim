@@ -4,8 +4,15 @@
 \alias{sa_optim}
 \title{A simmer simulated annealing optimizer}
 \usage{
-sa_optim(model, direction = c("min", "max"), objective, constraints,
-  params, control, big_m = 1e+06)
+sa_optim(
+  model,
+  direction = c("min", "max"),
+  objective,
+  constraints,
+  params,
+  control,
+  big_m = 1e+06
+)
 }
 \arguments{
 \item{model}{the simmer model encapsulated in a function}

@@ -1,3 +1,6 @@
+#' @import simmer
+NULL
+
 #' Function to pass results of simmer evaluation back to the optimization framework
 #'
 #' @param objective the value of the objective
@@ -68,8 +71,3 @@ run_optimized <- function(optim_obj) {
   sim_expr <- optim_obj$sim_expr
   do.call(run_instance, c(params, list(sim_expr = sim_expr)))$envs
 }
-
-
-#' @importFrom simmer %>%
-#' @export
-simmer::`%>%`
